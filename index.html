@@ -107,7 +107,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pixel Snow Falling Effect</title>
+    <title>Retro Pixel Snow</title>
     <style>
         body {
             margin: 0;
@@ -116,10 +116,10 @@
         }
         .snowflake {
             position: absolute;
-            width: 4px;
-            height: 4px;
+            width: 8px;
+            height: 8px;
             background: white;
-            box-shadow: 0 0 2px white;
+            image-rendering: pixelated;
         }
     </style>
 </head>
@@ -127,26 +127,34 @@
 
 <script>
     const snowflakes = [];
-    const maxFlakes = 100;
+    const maxFlakes = 80;
 
     function createSnowflake() {
         const snowflake = document.createElement('div');
         snowflake.classList.add('snowflake');
-        snowflake.style.left = Math.random() * window.innerWidth + 'px';
-        snowflake.style.top = '-10px';
-        snowflake.speed = 1 + Math.random() * 3;
+        snowflake.style.left = Math.floor(Math.random() * window.innerWidth / 8) * 8 + 'px';  // snap to 8px grid
+        snowflake.style.top = '-8px';
+        snowflake.speed = 0.5 + Math.random() * 1.5;
         document.body.appendChild(snowflake);
         snowflakes.push(snowflake);
     }
 
     function animateSnowflakes() {
         snowflakes.forEach((flake, index) => {
-            flake.style.top = (parseFloat(flake.style.top) + flake.speed) + 'px';
+            const currentTop = parseFloat(flake.style.top);
+            flake.style.top = (currentTop + flake.speed) + 'px';
 
-            // Slight horizontal drift
-            flake.style.left = (parseFloat(flake.style.left) + Math.sin(Date.now() / 500 + index) * 0.5) + 'px';
+            // Slight pixel-style horizontal drift
+            const currentLeft = parseFloat(flake.style.left);
+            if (Math.random() < 0.05) { // small chance of side movement
+                const drift = (Math.random() < 0.5 ? -8 : 8);
+                let newLeft = currentLeft + drift;
+                if (newLeft < 0) newLeft = 0;
+                if (newLeft > window.innerWidth - 8) newLeft = window.innerWidth - 8;
+                flake.style.left = newLeft + 'px';
+            }
 
-            if (parseFloat(flake.style.top) > window.innerHeight) {
+            if (currentTop > window.innerHeight) {
                 flake.remove();
                 snowflakes.splice(index, 1);
             }
@@ -159,7 +167,6 @@
         requestAnimationFrame(animateSnowflakes);
     }
 
-    // Start the snow animation
     animateSnowflakes();
 </script>
 

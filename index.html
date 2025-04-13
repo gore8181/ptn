@@ -107,67 +107,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retro Pixel Snow</title>
+    <title>Blood Dripping Effect</title>
     <style>
         body {
             margin: 0;
             background: black;
             overflow: hidden;
         }
-        .snowflake {
+        .blood-drip {
             position: absolute;
-            width: 8px;
-            height: 8px;
-            background: white;
-            image-rendering: pixelated;
+            width: 6px;
+            height: 6px;
+            background: darkred;
+            border-radius: 50%;
         }
     </style>
 </head>
 <body>
 
 <script>
-    const snowflakes = [];
-    const maxFlakes = 80;
+    const drips = [];
+    const maxDrips = 50;
 
-    function createSnowflake() {
-        const snowflake = document.createElement('div');
-        snowflake.classList.add('snowflake');
-        snowflake.style.left = Math.floor(Math.random() * window.innerWidth / 8) * 8 + 'px';  // snap to 8px grid
-        snowflake.style.top = '-8px';
-        snowflake.speed = 0.5 + Math.random() * 1.5;
-        document.body.appendChild(snowflake);
-        snowflakes.push(snowflake);
+    function createDrip() {
+        const drip = document.createElement('div');
+        drip.classList.add('blood-drip');
+
+        // Random x-position near the "ceiling"
+        drip.style.left = Math.random() * window.innerWidth + 'px';
+        drip.style.top = '0px';
+
+        // Random speed and size
+        drip.speed = 1 + Math.random() * 2;
+        drip.style.width = drip.style.height = (4 + Math.random() * 6) + 'px';
+
+        document.body.appendChild(drip);
+        drips.push(drip);
     }
 
-    function animateSnowflakes() {
-        snowflakes.forEach((flake, index) => {
-            const currentTop = parseFloat(flake.style.top);
-            flake.style.top = (currentTop + flake.speed) + 'px';
+    function animateDrips() {
+        drips.forEach((drip, index) => {
+            drip.style.top = (parseFloat(drip.style.top) + drip.speed) + 'px';
 
-            // Slight pixel-style horizontal drift
-            const currentLeft = parseFloat(flake.style.left);
-            if (Math.random() < 0.05) { // small chance of side movement
-                const drift = (Math.random() < 0.5 ? -8 : 8);
-                let newLeft = currentLeft + drift;
-                if (newLeft < 0) newLeft = 0;
-                if (newLeft > window.innerWidth - 8) newLeft = window.innerWidth - 8;
-                flake.style.left = newLeft + 'px';
-            }
+            // Simulate growing as it falls, like blood drops stretching
+            drip.style.height = (parseFloat(drip.style.height) + 0.05) + 'px';
 
-            if (currentTop > window.innerHeight) {
-                flake.remove();
-                snowflakes.splice(index, 1);
+            // Remove when off screen
+            if (parseFloat(drip.style.top) > window.innerHeight) {
+                drip.remove();
+                drips.splice(index, 1);
             }
         });
 
-        if (snowflakes.length < maxFlakes) {
-            createSnowflake();
+        if (drips.length < maxDrips) {
+            createDrip();
         }
 
-        requestAnimationFrame(animateSnowflakes);
+        requestAnimationFrame(animateDrips);
     }
 
-    animateSnowflakes();
+    animateDrips();
 </script>
 
 </body>

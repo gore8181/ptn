@@ -38,10 +38,51 @@
     .links a:hover {
       text-decoration: underline;
     }
+
+    .popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.95);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 1s ease;
+    }
+
+    .popup.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .enter-btn {
+      background: transparent;
+      border: 2px solid #808080;
+      color: #808080;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-family: monospace;
+      font-size: 1.2em;
+      transition: 0.3s ease;
+    }
+
+    .enter-btn:hover {
+      background: #808080;
+      color: black;
+    }
   </style>
 </head>
 <body>
 
+  <!-- Popup overlay -->
+  <div class="popup" id="popup">
+    <button class="enter-btn" onclick="closePopup()">ENTER</button>
+  </div>
+
+  <!-- Main content -->
   <pre>
 888                                             d8b          
 888                                             Y8P          
@@ -60,6 +101,16 @@
     <a href="https://luri.ng/register">Register</a>
     <a href="https://discord.gg/raid">Join Discord</a>
   </div>
+
+  <script>
+    function closePopup() {
+      const popup = document.getElementById('popup');
+      popup.classList.add('fade-out');
+      setTimeout(() => {
+        popup.style.display = 'none';
+      }, 1000);
+    }
+  </script>
 
 </body>
 </html>

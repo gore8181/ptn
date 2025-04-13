@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Purchase — hang.rip</title>
+  <style>
+    body {
+      background: #000;
+      color: #808080;
+      font-family: monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 40px 20px;
+      text-align: center;
+    }
+    h1 {
+      color: #fff;
+      margin-bottom: 30px;
+    }
+    .payment-option {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 20px 0;
+    }
+    .payment-option img {
+      width: 50px;
+      height: 50px;
+      margin-right: 15px;
+    }
+    .copy-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(128, 128, 128, 0.1);
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: 1px solid #808080;
+    }
+    .copy-container span {
+      user-select: all;
+    }
+    button.copy-btn {
+      background: transparent;
+      border: 1px solid #808080;
+      color: #808080;
+      font-family: monospace;
+      padding: 5px 10px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+    button.copy-btn:hover {
+      background: #808080;
+      color: black;
+    }
+    .back-link {
+      margin-top: 40px;
+      display: inline-block;
+      border: 2px solid #808080;
+      border-radius: 8px;
+      padding: 10px 20px;
+      text-decoration: none;
+      color: #808080;
+      font-size: 1.2em;
+      transition: all 0.3s ease;
+    }
+    .back-link:hover {
+      border-color: #fff;
+      color: #fff;
+      background-color: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Choose Your Payment Method</h1>
+
+  <div class="payment-option">
+    <img src="bitcoin-logo.png" alt="Bitcoin">
+    <div class="copy-container">
+      <span id="btcAddress">bc1qexamplebtcaddresshere</span>
+      <button class="copy-btn" onclick="copyToClipboard('btcAddress')">Copy</button>
+    </div>
+  </div>
+
+  <div class="payment-option">
+    <img src="cashapp-logo.png" alt="CashApp">
+    <div class="copy-container">
+      <span id="cashTag">$YourCashTag</span>
+      <button class="copy-btn" onclick="copyToClipboard('cashTag')">Copy</button>
+    </div>
+  </div>
+
+  <a class="back-link" href="features.html">Back to Features</a>
+
+  <script>
+    function copyToClipboard(elementId) {
+      const text = document.getElementById(elementId).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Copied: ' + text);
+      }).catch(err => {
+        console.error('Error copying text: ', err);
+      });
+    }
+  </script>
+
+</body>
+</html>

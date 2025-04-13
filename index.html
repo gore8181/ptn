@@ -12,138 +12,37 @@
     }
 
     body {
-      background: black;
+      background-color: #000;
       color: #808080;
       font-family: monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       height: 100vh;
       width: 100vw;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .scene {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
       text-align: center;
-      width: 100%;
-      height: 100%;
+      flex-direction: column;
     }
 
-    .scene.active {
-      display: flex;
-    }
-
-    .word-list p, .ascii, .links a {
-      margin: 8px 0;
-      font-size: 1.2em;
+    pre {
+      margin-bottom: 20px;
     }
 
     .links a {
       color: #808080;
       text-decoration: none;
-      margin: 0 10px;
+      margin: 0 15px;
+      font-size: 1.2em;
     }
 
     .links a:hover {
       text-decoration: underline;
     }
-
-    .terminal-popup {
-      background: #000;
-      border: 2px solid #808080;
-      padding: 20px;
-      box-shadow: 0 0 15px #808080;
-      width: 340px;
-      max-width: 95%;
-      height: 340px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      opacity: 1;
-      transition: opacity 1s ease;
-    }
-
-    .terminal-popup.fade-out {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .output {
-      flex-grow: 1;
-      overflow-y: auto;
-      white-space: pre-wrap;
-      margin-bottom: 10px;
-    }
-
-    .blinker {
-      display: inline-block;
-      width: 10px;
-      background: #808080;
-      margin-left: 5px;
-      animation: blink 1s infinite;
-      height: 1em;
-    }
-
-    @keyframes blink {
-      0%, 50% { opacity: 1; }
-      50.01%, 100% { opacity: 0; }
-    }
-
-    .enter-btn {
-      background: transparent;
-      border: 2px solid #808080;
-      color: #808080;
-      padding: 8px 16px;
-      cursor: pointer;
-      font-family: monospace;
-      font-size: 14px;
-      transition: 0.2s ease;
-      margin-top: 20px;
-    }
-
-    .enter-btn:hover:enabled {
-      background: #808080;
-      color: black;
-    }
-
-    .enter-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    /* Final scene centered — clean and empty */
-    .scene4 {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      width: 100%;
-      height: 100%;
-    }
   </style>
 </head>
 <body>
 
-<!-- Scene 1: Notable Members -->
-<div class="scene active" id="scene1">
-  <div class="word-list">
-    <p>notable members</p>
-    <p>lawsuit</p>
-    <p>court</p>
-    <p>fusi</p>
-    <p>v2m</p>
-    <p>ded</p>
-    <button class="enter-btn" onclick="nextScene(2)">Next</button>
-  </div>
-</div>
-
-<!-- Scene 2: ASCII Landing -->
-<div class="scene" id="scene2">
-  <pre class="ascii">
+  <pre>
 888                                             d8b          
 888                                             Y8P          
 888                                                          
@@ -154,84 +53,13 @@
 888  888 "Y888888 888  888  "Y88888 Y8P 888     888 88888P"  
                                 888                 888      
                            Y8b d88P                 888      
-                            "Y88P"                  888
+                            "Y88P"                  888      
   </pre>
+
   <div class="links">
     <a href="https://luri.ng/register">Register</a>
     <a href="https://discord.gg/raid">Join Discord</a>
   </div>
-  <button class="enter-btn" onclick="nextScene(3)">Next</button>
-</div>
-
-<!-- Scene 3: Terminal Simulation -->
-<div class="scene" id="scene3">
-  <div class="terminal-popup" id="popup">
-    <div class="output" id="output">
-      ⚠️  SECURE ACTIVATION<br>
-      Initializing security sequence...
-    </div>
-    <div>
-      <button class="enter-btn" id="enterBtn" disabled>ENTER</button>
-      <span class="blinker"></span>
-    </div>
-  </div>
-</div>
-
-<!-- Scene 4: Final Access — now empty but centered -->
-<div class="scene scene4" id="scene4">
-  <!-- Clean and centered, ready for any content -->
-</div>
-
-<script>
-  function nextScene(number) {
-    document.querySelectorAll('.scene').forEach(div => div.classList.remove('active'));
-    document.getElementById('scene' + number).classList.add('active');
-
-    if (number === 3) {
-      startTerminal();
-    }
-  }
-
-  function startTerminal() {
-    const output = document.getElementById('output');
-    const popup = document.getElementById('popup');
-    const enterBtn = document.getElementById('enterBtn');
-
-    const fakeLines = [
-      "Creating vps server...",
-      "Encrypting site files...",
-      "Uploading to secure server...",
-      "Scrambling system passwords...",
-      "Accessing root.tx...",
-      "Generating encryption key...",
-      "Awaiting confirmation...",
-      "Deleting false copies...",
-      "Tracking discord.gg/raid...",
-      "Overwriting system logs...",
-      "Operation completed successfully."
-    ];
-
-    let index = 0;
-    function addLine() {
-      if (index < fakeLines.length) {
-        output.innerHTML += `<br>> ${fakeLines[index]}`;
-        output.scrollTop = output.scrollHeight;
-        index++;
-        setTimeout(addLine, Math.random() * 1000 + 500);
-      } else {
-        output.innerHTML += `<br><strong>You may now ENTER the site...</strong>`;
-        enterBtn.disabled = false;
-      }
-    }
-
-    setTimeout(addLine, 1000);
-
-    enterBtn.onclick = () => {
-      popup.classList.add('fade-out');
-      setTimeout(() => nextScene(4), 1000);
-    };
-  }
-</script>
 
 </body>
 </html>

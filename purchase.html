@@ -74,6 +74,26 @@
       background-color: rgba(255, 255, 255, 0.05);
       box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
     }
+
+    /* Stylish Copied Notification */
+    .copied-popup {
+      position: fixed;
+      bottom: 30px;
+      background: #808080;
+      color: black;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 1em;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.4s ease;
+      pointer-events: none;
+    }
+    .copied-popup.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
   </style>
 </head>
 <body>
@@ -89,9 +109,9 @@
     </div>
   </div>
 
-  <!-- CashApp Section -->
+  <!-- CashApp Section (no logo) -->
   <div class="payment-option">
-  <div class="copy-container">
+    <div class="copy-container">
       <span id="cashTag">$YourCashTag</span>
       <button class="copy-btn" onclick="copyToClipboard('cashTag')">Copy</button>
     </div>
@@ -99,11 +119,15 @@
 
   <a class="back-link" href="features.html">Back to Features</a>
 
+  <div class="copied-popup" id="copiedPopup">Copied!</div>
+
   <script>
     function copyToClipboard(elementId) {
       const text = document.getElementById(elementId).innerText;
       navigator.clipboard.writeText(text).then(() => {
-        alert('Copied: ' + text);
+        const popup = document.getElementById('copiedPopup');
+        popup.classList.add('active');
+        setTimeout(() => popup.classList.remove('active'), 1500);
       }).catch(err => {
         console.error('Error copying text: ', err);
       });

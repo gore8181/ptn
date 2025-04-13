@@ -26,13 +26,27 @@
       cursor: crosshair;
     }
 
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+    }
+
     pre {
       margin-bottom: 20px;
+      z-index: 1;
+      position: relative;
+      white-space: pre-wrap;
     }
 
     .links {
       display: flex;
       gap: 20px;
+      z-index: 1;
+      position: relative;
     }
 
     .links a {
@@ -88,25 +102,36 @@
       background: #808080;
       color: black;
     }
+
+    .no-copy {
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+    }
   </style>
 </head>
 <body>
+
+  <canvas id="asciiBackground"></canvas>
 
   <!-- Popup overlay -->
   <div class="popup" id="popup">
     <button class="enter-btn" onclick="closePopup()">ENTER</button>
   </div>
 
-  <!-- Main content -->
+  <!-- Main content with protected meo.wtf -->
   <pre>
-                                                  888     .d888 
-                                                  888    d88P"  
-                                                  888    888    
+                                              888     .d888 
+                                              888    d88P"  
+                                              888    888    
 88888b.d88b.   .d88b.   .d88b.      888  888  888 888888 888888 
 888 "888 "88b d8P  Y8b d88""88b     888  888  888 888    888    
 888  888  888 88888888 888  888     888  888  888 888    888    
 888  888  888 Y8b.     Y88..88P d8b Y88b 888 d88P Y88b.  888    
 888  888  888  "Y8888   "Y88P"  Y8P  "Y8888888P"   "Y888 888    
+
+                <span class="no-copy">meo.wtf</span>
   </pre>
 
   <div class="links">
@@ -122,22 +147,45 @@
         popup.style.display = 'none';
       }, 1000);
     }
+
+    // ASCII Rain Background Animation
+    const canvas = document.getElementById('asciiBackground');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const letters = "01#$%&@*+=-";
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const drops = Array(Math.floor(columns)).fill(1);
+
+    function draw() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#808080";
+      ctx.font = fontSize + "px monospace";
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters[Math.floor(Math.random() * letters.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+
+        drops[i]++;
+      }
+    }
+
+    setInterval(draw, 50);
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      drops.length = Math.floor(canvas.width / fontSize);
+      drops.fill(1);
+    });
   </script>
 
 </body>
 </html>
-
-<pre>
-<span style="user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;">
-                                              888     .d888 
-                                              888    d88P"  
-                                              888    888    
-88888b.d88b.   .d88b.   .d88b.      888  888  888 888888 888888 
-888 "888 "88b d8P  Y8b d88""88b     888  888  888 888    888    
-888  888  888 88888888 888  888     888  888  888 888    888    
-888  888  888 Y8b.     Y88..88P d8b Y88b 888 d88P Y88b.  888    
-888  888  888  "Y8888   "Y88P"  Y8P  "Y8888888P"   "Y888 888    
-                 
-</span>
-</pre>
-

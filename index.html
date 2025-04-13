@@ -107,25 +107,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Display</title>
+    <title>Pixel Snow Falling Effect</title>
     <style>
         body {
-            background-color: black;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
+            background: black;
+            overflow: hidden;
         }
-        img {
-            max-width: 100%;
-            height: auto;
+        .snowflake {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            box-shadow: 0 0 2px white;
         }
     </style>
 </head>
 <body>
 
-    <img src="download (1).png" alt="Image">
+<script>
+    const snowflakes = [];
+    const maxFlakes = 100;
+
+    function createSnowflake() {
+        const snowflake = document.createElement('div');
+        snowflake.classList.add('snowflake');
+        snowflake.style.left = Math.random() * window.innerWidth + 'px';
+        snowflake.style.top = '-10px';
+        snowflake.speed = 1 + Math.random() * 3;
+        document.body.appendChild(snowflake);
+        snowflakes.push(snowflake);
+    }
+
+    function animateSnowflakes() {
+        snowflakes.forEach((flake, index) => {
+            flake.style.top = (parseFloat(flake.style.top) + flake.speed) + 'px';
+
+            // Slight horizontal drift
+            flake.style.left = (parseFloat(flake.style.left) + Math.sin(Date.now() / 500 + index) * 0.5) + 'px';
+
+            if (parseFloat(flake.style.top) > window.innerHeight) {
+                flake.remove();
+                snowflakes.splice(index, 1);
+            }
+        });
+
+        if (snowflakes.length < maxFlakes) {
+            createSnowflake();
+        }
+
+        requestAnimationFrame(animateSnowflakes);
+    }
+
+    // Start the snow animation
+    animateSnowflakes();
+</script>
 
 </body>
 </html>

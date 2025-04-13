@@ -10,7 +10,6 @@
       padding: 0;
       box-sizing: border-box;
     }
-
     html, body {
       background-color: #000;
       color: #808080;
@@ -25,11 +24,9 @@
       overflow: hidden;
       cursor: crosshair;
     }
-
-    .info-btn {
+    .info-btn, .gallery-btn {
       position: absolute;
       top: 20px;
-      left: 20px;
       background: transparent;
       border: 2px solid #808080;
       color: #808080;
@@ -39,27 +36,20 @@
       cursor: crosshair;
       transition: 0.3s ease;
     }
-
-    .info-btn:hover {
+    .info-btn { left: 20px; }
+    .gallery-btn { left: 100px; }
+    .info-btn:hover, .gallery-btn:hover {
       background: #808080;
       color: black;
     }
-
-    pre {
-      margin-bottom: 20px;
-    }
-
+    pre { margin-bottom: 20px; }
     .links a {
       color: #808080;
       text-decoration: none;
       margin: 0 15px;
       font-size: 1.2em;
     }
-
-    .links a:hover {
-      text-decoration: underline;
-    }
-
+    .links a:hover { text-decoration: underline; }
     .popup {
       position: fixed;
       top: 0;
@@ -74,12 +64,10 @@
       transition: opacity 1s ease;
       opacity: 1;
     }
-
     .popup.fade-out {
       opacity: 0;
       pointer-events: none;
     }
-
     .enter-btn {
       background: transparent;
       border: 2px solid #808080;
@@ -90,12 +78,10 @@
       font-size: 1.2em;
       transition: 0.3s ease;
     }
-
     .enter-btn:hover {
       background: #808080;
       color: black;
     }
-
     .page {
       display: none;
       flex-direction: column;
@@ -104,23 +90,33 @@
       height: 100%;
       width: 100%;
     }
-
-    .page.active {
+    .page.active { display: flex; }
+    .gallery {
       display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+    .gallery img {
+      max-width: 200px;
+      max-height: 200px;
+      border: 2px solid #808080;
+      border-radius: 8px;
     }
   </style>
 </head>
 <body>
 
-  <!-- INFO button -->
   <button class="info-btn" onclick="switchPage('info')">INFO</button>
+  <button class="gallery-btn" onclick="switchPage('gallery')">GALLERY</button>
 
-  <!-- Popup overlay -->
   <div class="popup" id="popup">
     <button class="enter-btn" onclick="closePopup()">ENTER</button>
   </div>
 
-  <!-- Page 1: Main content -->
   <div class="page active" id="mainPage">
     <pre>
                                                   888     .d888 
@@ -132,14 +128,12 @@
 888  888  888 Y8b.     Y88..88P d8b Y88b 888 d88P Y88b.  888    
 888  888  888  "Y8888   "Y88P"  Y8P  "Y8888888P"   "Y888 888    
     </pre>
-
     <div class="links">
       <a href="https://luri.ng/register">Register</a>
       <a href="https://discord.gg/raid">Join Discord</a>
     </div>
   </div>
 
-  <!-- Page 2: Info Page -->
   <div class="page" id="infoPage">
     <pre>
 --- INFO PAGE ---
@@ -153,7 +147,13 @@ hang.rip - Secure Access Node
 System Uptime: Infinite.
 Status: Operational.
     </pre>
+    <button class="enter-btn" onclick="switchPage('main')">BACK</button>
+  </div>
 
+  <div class="page" id="galleryPage">
+    <h2>Upload Image</h2>
+    <input type="file" id="imageInput" accept="image/*">
+    <div class="gallery" id="gallery"></div>
     <button class="enter-btn" onclick="switchPage('main')">BACK</button>
   </div>
 
@@ -161,21 +161,27 @@ Status: Operational.
     function closePopup() {
       const popup = document.getElementById('popup');
       popup.classList.add('fade-out');
-      setTimeout(() => {
-        popup.style.display = 'none';
-      }, 1000);
+      setTimeout(() => popup.style.display = 'none', 1000);
     }
 
     function switchPage(target) {
-      document.getElementById('mainPage').classList.remove('active');
-      document.getElementById('infoPage').classList.remove('active');
-
-      if (target === 'info') {
-        document.getElementById('infoPage').classList.add('active');
-      } else {
-        document.getElementById('mainPage').classList.add('active');
-      }
+      document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+      document.getElementById(target + 'Page').classList.add('active');
     }
+
+    document.getElementById('imageInput').addEventListener('change', function(event) {
+      const files = event.target.files;
+      const gallery = document.getElementById('gallery');
+      for (const file of files) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          gallery.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
   </script>
 
 </body>

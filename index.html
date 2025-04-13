@@ -1,143 +1,236 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Extort Terminal</title>
-    <style>
-        body {
-            margin: 0;
-            background: black;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: monospace;
-            color: #00ff00;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>hang.rip</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        .terminal-popup {
-            background: #000;
-            border: 2px solid #00ff00;
-            padding: 20px;
-            box-shadow: 0 0 15px #00ff00;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 340px;
-            max-width: 95%;
-            text-align: left;
-            overflow: hidden;
-            height: 340px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
+    body {
+      background: black;
+      color: #808080;
+      font-family: monospace;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-        .output {
-            flex-grow: 1;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            margin-bottom: 10px;
-        }
+    .scene {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 100%;
+      height: 100%;
+    }
 
-        .blinker {
-            display: inline-block;
-            width: 10px;
-            background: #00ff00;
-            margin-left: 5px;
-            animation: blink 1s infinite;
-            height: 1em;
-        }
+    .scene.active {
+      display: flex;
+    }
 
-        @keyframes blink {
-            0%, 50% { opacity: 1; }
-            50.01%, 100% { opacity: 0; }
-        }
+    .word-list p, .ascii, .links a {
+      margin: 8px 0;
+      font-size: 1.2em;
+    }
 
-        .enter-btn {
-            background: transparent;
-            border: 2px solid #00ff00;
-            color: #00ff00;
-            padding: 8px 16px;
-            cursor: pointer;
-            font-family: monospace;
-            font-size: 14px;
-            transition: 0.2s ease;
-        }
+    .links a {
+      color: #808080;
+      text-decoration: none;
+      margin: 0 10px;
+    }
 
-        .enter-btn:hover {
-            background: #00ff00;
-            color: black;
-        }
+    .links a:hover {
+      text-decoration: underline;
+    }
 
-        .real-site {
-            display: none;
-            color: white;
-            font-size: 2rem;
-            text-align: center;
-        }
-    </style>
+    .terminal-popup {
+      background: #000;
+      border: 2px solid #808080;
+      padding: 20px;
+      box-shadow: 0 0 15px #808080;
+      width: 340px;
+      max-width: 95%;
+      height: 340px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      opacity: 1;
+      transition: opacity 1s ease;
+    }
+
+    .terminal-popup.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .output {
+      flex-grow: 1;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      margin-bottom: 10px;
+    }
+
+    .blinker {
+      display: inline-block;
+      width: 10px;
+      background: #808080;
+      margin-left: 5px;
+      animation: blink 1s infinite;
+      height: 1em;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      50.01%, 100% { opacity: 0; }
+    }
+
+    .enter-btn {
+      background: transparent;
+      border: 2px solid #808080;
+      color: #808080;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-family: monospace;
+      font-size: 14px;
+      transition: 0.2s ease;
+      margin-top: 20px;
+    }
+
+    .enter-btn:hover:enabled {
+      background: #808080;
+      color: black;
+    }
+
+    .enter-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Final scene centered — clean and empty */
+    .scene4 {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
 </head>
 <body>
 
-<div class="terminal-popup" id="popup">
-    <div class="output" id="output">
-        ⚠️  SYSTEM BREACH DETECTED<br>
-        Initializing extortion sequence...
-    </div>
-    <div>
-        <button class="enter-btn" id="enterBtn">ENTER</button>
-        <span class="blinker"></span>
-    </div>
+<!-- Scene 1: Notable Members -->
+<div class="scene active" id="scene1">
+  <div class="word-list">
+    <p>notable members</p>
+    <p>lawsuit</p>
+    <p>court</p>
+    <p>fusi</p>
+    <p>v2m</p>
+    <p>ded</p>
+    <button class="enter-btn" onclick="nextScene(2)">Next</button>
+  </div>
 </div>
 
-<div class="real-site" id="realSite">
-    <h1>💻 Welcome to the real site 💻</h1>
-    <p>Access Granted.</p>
+<!-- Scene 2: ASCII Landing -->
+<div class="scene" id="scene2">
+  <pre class="ascii">
+888                                             d8b          
+888                                             Y8P          
+888                                                          
+88888b.   8888b.  88888b.   .d88b.      888d888 888 88888b.  
+888 "88b     "88b 888 "88b d88P"88b     888P"   888 888 "88b 
+888  888 .d888888 888  888 888  888     888     888 888  888 
+888  888 888  888 888  888 Y88b 888 d8b 888     888 888 d88P 
+888  888 "Y888888 888  888  "Y88888 Y8P 888     888 88888P"  
+                                888                 888      
+                           Y8b d88P                 888      
+                            "Y88P"                  888
+  </pre>
+  <div class="links">
+    <a href="https://luri.ng/register">Register</a>
+    <a href="https://discord.gg/raid">Join Discord</a>
+  </div>
+  <button class="enter-btn" onclick="nextScene(3)">Next</button>
+</div>
+
+<!-- Scene 3: Terminal Simulation -->
+<div class="scene" id="scene3">
+  <div class="terminal-popup" id="popup">
+    <div class="output" id="output">
+      ⚠️  SECURE ACTIVATION<br>
+      Initializing security sequence...
+    </div>
+    <div>
+      <button class="enter-btn" id="enterBtn" disabled>ENTER</button>
+      <span class="blinker"></span>
+    </div>
+  </div>
+</div>
+
+<!-- Scene 4: Final Access — now empty but centered -->
+<div class="scene scene4" id="scene4">
+  <!-- Clean and centered, ready for any content -->
 </div>
 
 <script>
+  function nextScene(number) {
+    document.querySelectorAll('.scene').forEach(div => div.classList.remove('active'));
+    document.getElementById('scene' + number).classList.add('active');
+
+    if (number === 3) {
+      startTerminal();
+    }
+  }
+
+  function startTerminal() {
     const output = document.getElementById('output');
     const popup = document.getElementById('popup');
-    const realSite = document.getElementById('realSite');
+    const enterBtn = document.getElementById('enterBtn');
 
     const fakeLines = [
-        "Encrypting sensitive files...",
-        "Stealing cookies... 🍪",
-        "Uploading to darkweb server...",
-        "Scrambling system passwords...",
-        "Accessing webcam feed... 😈",
-        "Generating ransom demand...",
-        "Awaiting payment confirmation...",
-        "Deleting shadow copies...",
-        "Tracking cryptocurrency wallet...",
-        "Overwriting system logs...",
-        "Operation completed successfully."
+      "Creating vps server...",
+      "Encrypting site files...",
+      "Uploading to secure server...",
+      "Scrambling system passwords...",
+      "Accessing root.tx...",
+      "Generating encryption key...",
+      "Awaiting confirmation...",
+      "Deleting false copies...",
+      "Tracking discord.gg/raid...",
+      "Overwriting system logs...",
+      "Operation completed successfully."
     ];
 
     let index = 0;
-
     function addLine() {
-        if(index < fakeLines.length){
-            output.innerHTML += `<br>> ${fakeLines[index]}`;
-            output.scrollTop = output.scrollHeight;
-            index++;
-            setTimeout(addLine, Math.random() * 1000 + 500);
-        } else {
-            output.innerHTML += `<br><strong>💰 Awaiting Payment...</strong>`;
-        }
+      if (index < fakeLines.length) {
+        output.innerHTML += `<br>> ${fakeLines[index]}`;
+        output.scrollTop = output.scrollHeight;
+        index++;
+        setTimeout(addLine, Math.random() * 1000 + 500);
+      } else {
+        output.innerHTML += `<br><strong>You may now ENTER the site...</strong>`;
+        enterBtn.disabled = false;
+      }
     }
 
-    // Start fake loading
     setTimeout(addLine, 1000);
 
-    document.getElementById('enterBtn').onclick = () => {
-        popup.style.display = 'none';
-        realSite.style.display = 'flex';
-        document.body.style.background = '#111';  // darken background for real site
+    enterBtn.onclick = () => {
+      popup.classList.add('fade-out');
+      setTimeout(() => nextScene(4), 1000);
     };
+  }
 </script>
 
 </body>

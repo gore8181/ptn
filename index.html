@@ -133,15 +133,17 @@
             max-width: 95%;
             text-align: left;
             overflow: hidden;
-            height: 300px;
+            height: 340px;
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
         }
 
         .output {
             flex-grow: 1;
             overflow-y: auto;
             white-space: pre-wrap;
+            margin-bottom: 10px;
         }
 
         .blinker {
@@ -157,6 +159,22 @@
             0%, 50% { opacity: 1; }
             50.01%, 100% { opacity: 0; }
         }
+
+        .enter-btn {
+            background: transparent;
+            border: 2px solid #00ff00;
+            color: #00ff00;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-family: monospace;
+            font-size: 14px;
+            transition: 0.2s ease;
+        }
+
+        .enter-btn:hover {
+            background: #00ff00;
+            color: black;
+        }
     </style>
 </head>
 <body>
@@ -166,7 +184,10 @@
         ⚠️  SYSTEM BREACH DETECTED<br>
         Initializing extortion sequence...
     </div>
-    <p><span class="blinker"></span></p>
+    <div>
+        <button class="enter-btn" onclick="fakeNext()">ENTER</button>
+        <span class="blinker"></span>
+    </div>
 </div>
 
 <script>
@@ -188,22 +209,20 @@
 
     let index = 0;
 
-    function addLine() {
+    function fakeNext() {
         if(index < fakeLines.length){
             output.innerHTML += `<br>> ${fakeLines[index]}`;
             output.scrollTop = output.scrollHeight;
             index++;
-
-            // Random delay for realism
-            setTimeout(addLine, Math.random() * 1000 + 500);
         } else {
             output.innerHTML += `<br><strong>💰 Awaiting Payment...</strong>`;
         }
     }
 
-    // Start fake progress typing
-    setTimeout(addLine, 1500);
+    // Optional: Auto start first line after a delay
+    setTimeout(fakeNext, 1000);
 </script>
 
 </body>
 </html>
+

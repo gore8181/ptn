@@ -178,9 +178,14 @@
             transition: 0.2s ease;
         }
 
-        .enter-btn:hover {
+        .enter-btn:hover:enabled {
             background: #808080;
             color: black;
+        }
+
+        .enter-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .real-site {
@@ -203,7 +208,7 @@
         Initializing security sequence...
     </div>
     <div>
-        <button class="enter-btn" id="enterBtn">ENTER</button>
+        <button class="enter-btn" id="enterBtn" disabled>ENTER</button>
         <span class="blinker"></span>
     </div>
 </div>
@@ -219,6 +224,7 @@
     const output = document.getElementById('output');
     const popup = document.getElementById('popup');
     const realSite = document.getElementById('realSite');
+    const enterBtn = document.getElementById('enterBtn');
 
     const fakeLines = [
         "Creating vps server...",
@@ -244,22 +250,21 @@
             setTimeout(addLine, Math.random() * 1000 + 500);
         } else {
             output.innerHTML += `<br><strong> You may now ENTER the site...</strong>`;
+            enterBtn.disabled = false;
         }
     }
 
-    // Start fake loading
     setTimeout(addLine, 1000);
 
-    document.getElementById('enterBtn').onclick = () => {
+    enterBtn.onclick = () => {
         popup.classList.add('fade-out');
         setTimeout(() => {
             popup.style.display = 'none';
             realSite.style.display = 'flex';
             document.body.style.background = '#111';
-        }, 1000);  // Matches the transition time
+        }, 1000);
     };
 </script>
 
 </body>
 </html>
-

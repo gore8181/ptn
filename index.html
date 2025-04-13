@@ -175,6 +175,13 @@
             background: #00ff00;
             color: black;
         }
+
+        .real-site {
+            display: none;
+            color: white;
+            font-size: 2rem;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -185,13 +192,20 @@
         Initializing extortion sequence...
     </div>
     <div>
-        <button class="enter-btn" onclick="fakeNext()">ENTER</button>
+        <button class="enter-btn" id="enterBtn">ENTER</button>
         <span class="blinker"></span>
     </div>
 </div>
 
+<div class="real-site" id="realSite">
+    <h1>💻 Welcome to the real site 💻</h1>
+    <p>Access Granted.</p>
+</div>
+
 <script>
     const output = document.getElementById('output');
+    const popup = document.getElementById('popup');
+    const realSite = document.getElementById('realSite');
 
     const fakeLines = [
         "Encrypting sensitive files...",
@@ -209,20 +223,26 @@
 
     let index = 0;
 
-    function fakeNext() {
+    function addLine() {
         if(index < fakeLines.length){
             output.innerHTML += `<br>> ${fakeLines[index]}`;
             output.scrollTop = output.scrollHeight;
             index++;
+            setTimeout(addLine, Math.random() * 1000 + 500);
         } else {
             output.innerHTML += `<br><strong>💰 Awaiting Payment...</strong>`;
         }
     }
 
-    // Optional: Auto start first line after a delay
-    setTimeout(fakeNext, 1000);
+    // Start fake loading
+    setTimeout(addLine, 1000);
+
+    document.getElementById('enterBtn').onclick = () => {
+        popup.style.display = 'none';
+        realSite.style.display = 'flex';
+        document.body.style.background = '#111';  // darken background for real site
+    };
 </script>
 
 </body>
 </html>
-

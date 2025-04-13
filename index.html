@@ -1,55 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>hang.rip</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>catgir.ls - Inspired</title>
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-    html, body {
-      background-color: #000;
+
+    body {
+      background: black;
       color: #808080;
       font-family: monospace;
+      height: 100vh;
+      width: 100vw;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      width: 100vw;
-      text-align: center;
       flex-direction: column;
-      overflow: hidden;
-      cursor: crosshair;
+      text-align: center;
     }
-    .info-btn, .gallery-btn {
-      position: absolute;
-      top: 20px;
-      background: transparent;
-      border: 2px solid #808080;
-      color: #808080;
-      padding: 5px 15px;
-      font-family: monospace;
-      font-size: 1em;
-      cursor: crosshair;
-      transition: 0.3s ease;
+
+    pre {
+      margin-bottom: 20px;
     }
-    .info-btn { left: 20px; }
-    .gallery-btn { left: 100px; }
-    .info-btn:hover, .gallery-btn:hover {
-      background: #808080;
-      color: black;
-    }
-    pre { margin-bottom: 20px; }
+
     .links a {
       color: #808080;
       text-decoration: none;
       margin: 0 15px;
-      font-size: 1.2em;
+      font-size: 1.1em;
+      transition: color 0.2s ease;
     }
-    .links a:hover { text-decoration: underline; }
+
+    .links a:hover {
+      color: white;
+    }
+
     .popup {
       position: fixed;
       top: 0;
@@ -60,128 +50,61 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 9999;
-      transition: opacity 1s ease;
-      opacity: 1;
+      z-index: 10;
+      transition: opacity 0.5s ease;
     }
+
     .popup.fade-out {
       opacity: 0;
       pointer-events: none;
     }
+
     .enter-btn {
       background: transparent;
       border: 2px solid #808080;
       color: #808080;
       padding: 10px 20px;
-      cursor: crosshair;
+      cursor: pointer;
       font-family: monospace;
       font-size: 1.2em;
       transition: 0.3s ease;
     }
+
     .enter-btn:hover {
       background: #808080;
       color: black;
-    }
-    .page {
-      display: none;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100%;
-      width: 100%;
-    }
-    .page.active { display: flex; }
-    .gallery {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      padding: 20px;
-      max-height: 70vh;
-      overflow-y: auto;
-    }
-    .gallery img {
-      max-width: 200px;
-      max-height: 200px;
-      border: 2px solid #808080;
-      border-radius: 8px;
     }
   </style>
 </head>
 <body>
 
-  <button class="info-btn" onclick="switchPage('info')">INFO</button>
-  <button class="gallery-btn" onclick="switchPage('gallery')">GALLERY</button>
-
+  <!-- Popup -->
   <div class="popup" id="popup">
     <button class="enter-btn" onclick="closePopup()">ENTER</button>
   </div>
 
-  <div class="page active" id="mainPage">
-    <pre>
-                                                  888     .d888 
-                                                  888    d88P"  
-                                                  888    888    
-88888b.d88b.   .d88b.   .d88b.      888  888  888 888888 888888 
-888 "888 "88b d8P  Y8b d88""88b     888  888  888 888    888    
-888  888  888 88888888 888  888     888  888  888 888    888    
-888  888  888 Y8b.     Y88..88P d8b Y88b 888 d88P Y88b.  888    
-888  888  888  "Y8888   "Y88P"  Y8P  "Y8888888P"   "Y888 888    
-    </pre>
-    <div class="links">
-      <a href="https://luri.ng/register">Register</a>
-      <a href="https://discord.gg/raid">Join Discord</a>
-    </div>
-  </div>
+  <!-- ASCII / Text Logo -->
+  <pre>
+   ██████╗ █████╗ ████████╗ ██████╗  ██████╗ ██╗     
+  ██╔════╝██╔══██╗╚══██╔══╝██╔═══██╗██╔════╝ ██║     
+  ██║     ███████║   ██║   ██║   ██║██║  ███╗██║     
+  ██║     ██╔══██║   ██║   ██║   ██║██║   ██║██║     
+  ╚██████╗██║  ██║   ██║   ╚██████╔╝╚██████╔╝███████╗
+   ╚═════╝╚═╝  ╚═╝   ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝
+  </pre>
 
-  <div class="page" id="infoPage">
-    <pre>
---- INFO PAGE ---
-
-hang.rip - Secure Access Node
-
-> Links:
-- Register: https://luri.ng/register
-- Discord: https://discord.gg/raid
-
-System Uptime: Infinite.
-Status: Operational.
-    </pre>
-    <button class="enter-btn" onclick="switchPage('main')">BACK</button>
-  </div>
-
-  <div class="page" id="galleryPage">
-    <h2>Upload Image</h2>
-    <input type="file" id="imageInput" accept="image/*">
-    <div class="gallery" id="gallery"></div>
-    <button class="enter-btn" onclick="switchPage('main')">BACK</button>
+  <!-- Links -->
+  <div class="links">
+    <a href="https://yourdomain/register">Register</a>
+    <a href="https://discord.gg/yourinvite">Join Discord</a>
   </div>
 
   <script>
     function closePopup() {
       const popup = document.getElementById('popup');
       popup.classList.add('fade-out');
-      setTimeout(() => popup.style.display = 'none', 1000);
+      setTimeout(() => popup.style.display = 'none', 500);
     }
-
-    function switchPage(target) {
-      document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-      document.getElementById(target + 'Page').classList.add('active');
-    }
-
-    document.getElementById('imageInput').addEventListener('change', function(event) {
-      const files = event.target.files;
-      const gallery = document.getElementById('gallery');
-      for (const file of files) {
-        const reader = new FileReader();
-        reader.onload = e => {
-          const img = document.createElement('img');
-          img.src = e.target.result;
-          gallery.appendChild(img);
-        };
-        reader.readAsDataURL(file);
-      }
-    });
   </script>
 
 </body>

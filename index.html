@@ -11,7 +11,7 @@
       box-sizing: border-box;
     }
 
-    body {
+    html, body {
       background-color: #000;
       color: #808080;
       font-family: monospace;
@@ -22,6 +22,27 @@
       width: 100vw;
       text-align: center;
       flex-direction: column;
+      overflow: hidden;
+      cursor: crosshair;
+    }
+
+    .info-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: transparent;
+      border: 2px solid #808080;
+      color: #808080;
+      padding: 5px 15px;
+      font-family: monospace;
+      font-size: 1em;
+      cursor: crosshair;
+      transition: 0.3s ease;
+    }
+
+    .info-btn:hover {
+      background: #808080;
+      color: black;
     }
 
     pre {
@@ -51,6 +72,7 @@
       align-items: center;
       z-index: 9999;
       transition: opacity 1s ease;
+      opacity: 1;
     }
 
     .popup.fade-out {
@@ -63,7 +85,7 @@
       border: 2px solid #808080;
       color: #808080;
       padding: 10px 20px;
-      cursor: pointer;
+      cursor: crosshair;
       font-family: monospace;
       font-size: 1.2em;
       transition: 0.3s ease;
@@ -73,18 +95,34 @@
       background: #808080;
       color: black;
     }
+
+    .page {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      width: 100%;
+    }
+
+    .page.active {
+      display: flex;
+    }
   </style>
 </head>
 <body>
+
+  <!-- INFO button -->
+  <button class="info-btn" onclick="switchPage('info')">INFO</button>
 
   <!-- Popup overlay -->
   <div class="popup" id="popup">
     <button class="enter-btn" onclick="closePopup()">ENTER</button>
   </div>
 
-  <!-- Main content -->
-  <pre>
-
+  <!-- Page 1: Main content -->
+  <div class="page active" id="mainPage">
+    <pre>
                                                   888     .d888 
                                                   888    d88P"  
                                                   888    888    
@@ -93,15 +131,30 @@
 888  888  888 88888888 888  888     888  888  888 888    888    
 888  888  888 Y8b.     Y88..88P d8b Y88b 888 d88P Y88b.  888    
 888  888  888  "Y8888   "Y88P"  Y8P  "Y8888888P"   "Y888 888    
-                                                                
-                                                                
-                                                                
-   
-  </pre>
+    </pre>
 
-  <div class="links">
-    <a href="https://luri.ng/register">Register</a>
-    <a href="https://discord.gg/raid">Join Discord</a>
+    <div class="links">
+      <a href="https://luri.ng/register">Register</a>
+      <a href="https://discord.gg/raid">Join Discord</a>
+    </div>
+  </div>
+
+  <!-- Page 2: Info Page -->
+  <div class="page" id="infoPage">
+    <pre>
+--- INFO PAGE ---
+
+hang.rip - Secure Access Node
+
+> Links:
+- Register: https://luri.ng/register
+- Discord: https://discord.gg/raid
+
+System Uptime: Infinite.
+Status: Operational.
+    </pre>
+
+    <button class="enter-btn" onclick="switchPage('main')">BACK</button>
   </div>
 
   <script>
@@ -111,6 +164,17 @@
       setTimeout(() => {
         popup.style.display = 'none';
       }, 1000);
+    }
+
+    function switchPage(target) {
+      document.getElementById('mainPage').classList.remove('active');
+      document.getElementById('infoPage').classList.remove('active');
+
+      if (target === 'info') {
+        document.getElementById('infoPage').classList.add('active');
+      } else {
+        document.getElementById('mainPage').classList.add('active');
+      }
     }
   </script>
 

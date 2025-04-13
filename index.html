@@ -5,12 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>hang.rip</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
       background-color: #000;
       color: #808080;
@@ -25,30 +20,24 @@
       overflow: hidden;
       cursor: crosshair;
     }
-
     canvas {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
       z-index: 0;
     }
-
     pre {
       margin-bottom: 20px;
       z-index: 1;
       position: relative;
       white-space: pre-wrap;
     }
-
     .links {
       display: flex;
       gap: 20px;
       z-index: 1;
       position: relative;
     }
-
     .links a {
       display: inline-block;
       border: 2px solid #808080;
@@ -59,21 +48,17 @@
       font-size: 1.2em;
       transition: all 0.3s ease;
     }
-
     .links a:hover {
       border-color: #ffffff;
       color: #ffffff;
       background-color: rgba(255, 255, 255, 0.05);
       box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
     }
-
     .popup {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.95);
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.95);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -81,12 +66,7 @@
       transition: opacity 1s ease;
       opacity: 1;
     }
-
-    .popup.fade-out {
-      opacity: 0;
-      pointer-events: none;
-    }
-
+    .popup.fade-out { opacity: 0; pointer-events: none; }
     .enter-btn {
       background: transparent;
       border: 2px solid #808080;
@@ -97,12 +77,7 @@
       font-size: 1.2em;
       transition: 0.3s ease;
     }
-
-    .enter-btn:hover {
-      background: #808080;
-      color: black;
-    }
-
+    .enter-btn:hover { background: #808080; color: black; }
     .no-copy {
       user-select: none;
       -webkit-user-select: none;
@@ -110,11 +85,7 @@
       -ms-user-select: none;
       font-weight: bold;
     }
-
-    .links a[href*="luri.ng"] {
-      font-weight: bold;
-    }
-
+    .links a[href*="luri.ng"] { font-weight: bold; }
   </style>
 </head>
 <body>
@@ -126,7 +97,7 @@
     <button class="enter-btn" onclick="closePopup()">ENTER</button>
   </div>
 
-  <!-- Main content with protected and bold meo.wtf -->
+  <!-- Main ASCII content -->
   <pre>
                                               888     .d888 
                                               888    d88P"  
@@ -140,21 +111,21 @@
                 <span class="no-copy">meo.wtf</span>
   </pre>
 
+  <!-- Navigation Links -->
   <div class="links">
     <a href="https://luri.ng/register">Register</a>
     <a href="https://discord.gg/raid">Join Discord</a>
+    <a href="features.html">Features</a>
   </div>
 
   <script>
     function closePopup() {
       const popup = document.getElementById('popup');
       popup.classList.add('fade-out');
-      setTimeout(() => {
-        popup.style.display = 'none';
-      }, 1000);
+      setTimeout(() => popup.style.display = 'none', 1000);
     }
 
-    // ASCII Rain Background Animation
+    // ASCII Rain Animation
     const canvas = document.getElementById('asciiBackground');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
@@ -166,7 +137,7 @@
     const drops = Array(Math.floor(columns)).fill(1);
 
     function draw() {
-      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillStyle = "rgba(0,0,0,0.05)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = "#808080";
       ctx.font = fontSize + "px monospace";
@@ -174,15 +145,10 @@
       for (let i = 0; i < drops.length; i++) {
         const text = letters[Math.floor(Math.random() * letters.length)];
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-          drops[i] = 0;
-        }
-
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
         drops[i]++;
       }
     }
-
     setInterval(draw, 50);
 
     window.addEventListener('resize', () => {
@@ -192,74 +158,5 @@
       drops.fill(1);
     });
   </script>
-
 </body>
 </html>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Product Features — hang.rip</title>
-  <style>
-    body {
-      background: #000;
-      color: #808080;
-      font-family: monospace;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      min-height: 100vh;
-      padding: 40px 20px;
-      text-align: center;
-    }
-    h1 {
-      margin-bottom: 20px;
-      color: #fff;
-    }
-    ul {
-      list-style: none;
-      padding: 0;
-      margin-bottom: 30px;
-    }
-    li {
-      margin: 10px 0;
-    }
-    .back-link, .buy-link {
-      display: inline-block;
-      border: 2px solid #808080;
-      border-radius: 8px;
-      padding: 10px 20px;
-      text-decoration: none;
-      color: #808080;
-      font-size: 1.2em;
-      margin: 10px;
-      transition: all 0.3s ease;
-    }
-    .back-link:hover, .buy-link:hover {
-      border-color: #fff;
-      color: #fff;
-      background-color: rgba(255, 255, 255, 0.05);
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-    }
-  </style>
-</head>
-<body>
-
-  <h1>Product Features</h1>
-  <ul>
-    <li>✔️ Feature 1 — Describe something awesome here</li>
-    <li>✔️ Feature 2 — Another benefit</li>
-    <li>✔️ Feature 3 — Security, speed, convenience etc.</li>
-  </ul>
-
-  <a class="buy-link" href="https://your-purchase-link.com">Purchase Now</a>
-  <a class="back-link" href="index.html">Back to Home</a>
-
-</body>
-</html>
-
-  <a href="features.html" class="features-btn">Features</a>
-</div>

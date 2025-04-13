@@ -13,14 +13,14 @@
             align-items: center;
             justify-content: center;
             font-family: monospace;
-            color: #808080;
+            color: #00ff00;
         }
 
         .terminal-popup {
             background: #000;
-            border: 2px solid #808080;
+            border: 2px solid #00ff00;
             padding: 20px;
-            box-shadow: 0 0 15px #808080;
+            box-shadow: 0 0 15px #00ff00;
             position: absolute;
             top: 50%;
             left: 50%;
@@ -33,13 +33,6 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            opacity: 1;
-            transition: opacity 1s ease;
-        }
-
-        .terminal-popup.fade-out {
-            opacity: 0;
-            pointer-events: none;
         }
 
         .output {
@@ -52,7 +45,7 @@
         .blinker {
             display: inline-block;
             width: 10px;
-            background: #808080;
+            background: #00ff00;
             margin-left: 5px;
             animation: blink 1s infinite;
             height: 1em;
@@ -65,8 +58,8 @@
 
         .enter-btn {
             background: transparent;
-            border: 2px solid #808080;
-            color: #808080;
+            border: 2px solid #00ff00;
+            color: #00ff00;
             padding: 8px 16px;
             cursor: pointer;
             font-family: monospace;
@@ -75,7 +68,7 @@
         }
 
         .enter-btn:hover {
-            background: #808080;
+            background: #00ff00;
             color: black;
         }
 
@@ -84,10 +77,6 @@
             color: white;
             font-size: 2rem;
             text-align: center;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
         }
     </style>
 </head>
@@ -95,8 +84,8 @@
 
 <div class="terminal-popup" id="popup">
     <div class="output" id="output">
-        ⚠️  SECURE ACTIVATION<br>
-        Initializing security sequence...
+        ⚠️  SYSTEM BREACH DETECTED<br>
+        Initializing extortion sequence...
     </div>
     <div>
         <button class="enter-btn" id="enterBtn">ENTER</button>
@@ -105,10 +94,8 @@
 </div>
 
 <div class="real-site" id="realSite">
-    <div>
-        <h1>💻 Welcome to the Secure Site 💻</h1>
-        <p>Access Granted. You’ve entered the system.</p>
-    </div>
+    <h1>💻 Welcome to the real site 💻</h1>
+    <p>Access Granted.</p>
 </div>
 
 <script>
@@ -117,15 +104,15 @@
     const realSite = document.getElementById('realSite');
 
     const fakeLines = [
-        "Creating vps server...",
-        "Encrypting site files... ",
-        "Uploading to secure server...",
+        "Encrypting sensitive files...",
+        "Stealing cookies... 🍪",
+        "Uploading to darkweb server...",
         "Scrambling system passwords...",
-        "Accessing root.tx...",
-        "Generating encryption key...",
-        "Awaiting confirmation...",
-        "Deleting false copies...",
-        "Tracking discord.gg/raid...",
+        "Accessing webcam feed... 😈",
+        "Generating ransom demand...",
+        "Awaiting payment confirmation...",
+        "Deleting shadow copies...",
+        "Tracking cryptocurrency wallet...",
         "Overwriting system logs...",
         "Operation completed successfully."
     ];
@@ -139,7 +126,7 @@
             index++;
             setTimeout(addLine, Math.random() * 1000 + 500);
         } else {
-            output.innerHTML += `<br><strong> You may now ENTER the site...</strong>`;
+            output.innerHTML += `<br><strong>💰 Awaiting Payment...</strong>`;
         }
     }
 
@@ -147,12 +134,9 @@
     setTimeout(addLine, 1000);
 
     document.getElementById('enterBtn').onclick = () => {
-        popup.classList.add('fade-out');
-        setTimeout(() => {
-            popup.style.display = 'none';
-            realSite.style.display = 'flex';
-            document.body.style.background = '#111';
-        }, 1000);  // Matches the transition time
+        popup.style.display = 'none';
+        realSite.style.display = 'flex';
+        document.body.style.background = '#111';  // darken background for real site
     };
 </script>
 

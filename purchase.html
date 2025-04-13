@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Purchase — hang.rip</title>
+  <title>Payment — hang.rip</title>
   <style>
     body {
       background: #000;
@@ -14,36 +14,43 @@
       align-items: center;
       flex-direction: column;
       min-height: 100vh;
-      padding: 40px 20px;
+      padding: 20px;
       text-align: center;
     }
+
     h1 {
       color: #fff;
       margin-bottom: 30px;
     }
-    .payment-option {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+
+    .payment-section {
       margin: 20px 0;
+      background: rgba(128, 128, 128, 0.1);
+      border: 1px solid #808080;
+      border-radius: 8px;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 300px;
     }
-    .payment-option img {
-      width: 50px;
-      height: 50px;
-      margin-right: 15px;
-    }
+
     .copy-container {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 10px;
-      background: rgba(128, 128, 128, 0.1);
-      padding: 10px 20px;
-      border-radius: 8px;
+      background: rgba(128, 128, 128, 0.05);
+      padding: 10px 15px;
       border: 1px solid #808080;
+      border-radius: 8px;
+      width: 100%;
+      margin-top: 10px;
     }
+
     .copy-container span {
       user-select: all;
     }
+
     button.copy-btn {
       background: transparent;
       border: 1px solid #808080;
@@ -53,29 +60,12 @@
       cursor: pointer;
       transition: 0.3s ease;
     }
+
     button.copy-btn:hover {
       background: #808080;
       color: black;
     }
-    .back-link {
-      margin-top: 40px;
-      display: inline-block;
-      border: 2px solid #808080;
-      border-radius: 8px;
-      padding: 10px 20px;
-      text-decoration: none;
-      color: #808080;
-      font-size: 1.2em;
-      transition: all 0.3s ease;
-    }
-    .back-link:hover {
-      border-color: #fff;
-      color: #fff;
-      background-color: rgba(255, 255, 255, 0.05);
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-    }
 
-    /* Stylish Copied Notification */
     .copied-popup {
       position: fixed;
       bottom: 30px;
@@ -90,27 +80,48 @@
       transition: all 0.4s ease;
       pointer-events: none;
     }
+
     .copied-popup.active {
       opacity: 1;
       transform: translateY(0);
+    }
+
+    .back-link {
+      margin-top: 40px;
+      display: inline-block;
+      border: 2px solid #808080;
+      border-radius: 8px;
+      padding: 10px 20px;
+      text-decoration: none;
+      color: #808080;
+      font-size: 1.2em;
+      transition: all 0.3s ease;
+    }
+
+    .back-link:hover {
+      border-color: #fff;
+      color: #fff;
+      background-color: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
     }
   </style>
 </head>
 <body>
 
-  <h1>Choose Your Payment Method</h1>
+  <h1>Complete Your Purchase</h1>
 
   <!-- Bitcoin Section -->
-  <div class="payment-option">
-    <img src="bitcoin-logo.png" alt="Bitcoin Logo">
+  <div class="payment-section">
+    <h2>Bitcoin Address</h2>
     <div class="copy-container">
       <span id="btcAddress">bc1qexamplebtcaddresshere</span>
       <button class="copy-btn" onclick="copyToClipboard('btcAddress')">Copy</button>
     </div>
   </div>
 
-  <!-- CashApp Section (no logo) -->
-  <div class="payment-option">
+  <!-- CashApp Section -->
+  <div class="payment-section">
+    <h2>CashApp Info</h2>
     <div class="copy-container">
       <span id="cashTag">$YourCashTag</span>
       <button class="copy-btn" onclick="copyToClipboard('cashTag')">Copy</button>

@@ -107,7 +107,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blood Dripping with Splatter</title>
+    <title>Blood Dripping Effect</title>
     <style>
         body {
             margin: 0;
@@ -120,11 +120,6 @@
             height: 6px;
             background: darkred;
             border-radius: 50%;
-            transform-origin: top center;
-        }
-        .splatter {
-            transition: all 0.3s ease;
-            border-radius: 0;
         }
     </style>
 </head>
@@ -132,61 +127,38 @@
 
 <script>
     const drips = [];
-    const maxDrips = 40;
+    const maxDrips = 50;
 
     function createDrip() {
         const drip = document.createElement('div');
         drip.classList.add('blood-drip');
 
+        // Random x-position near the "ceiling"
         drip.style.left = Math.random() * window.innerWidth + 'px';
         drip.style.top = '0px';
 
-        // Hanging delay effect
-        drip.hangTime = Math.random() * 80 + 20; // frames to "hang"
-        drip.falling = false;
-
-        // Speed once it starts falling
+        // Random speed and size
         drip.speed = 1 + Math.random() * 2;
+        drip.style.width = drip.style.height = (4 + Math.random() * 6) + 'px';
+
         document.body.appendChild(drip);
         drips.push(drip);
     }
 
     function animateDrips() {
         drips.forEach((drip, index) => {
-            if (!drip.falling) {
-                // Hanging stage: slight stretch downward
-                drip.hangTime--;
-                let stretch = 1 + (80 - drip.hangTime) * 0.01;
-                drip.style.transform = `scaleY(${Math.min(stretch, 1.8)})`;
+            drip.style.top = (parseFloat(drip.style.top) + drip.speed) + 'px';
 
-                if (drip.hangTime <= 0) {
-                    drip.falling = true;
-                    drip.style.transform = 'scaleY(1)';
-                }
-            } else {
-                // Falling stage
-                drip.style.top = (parseFloat(drip.style.top) + drip.speed) + 'px';
+            // Simulate growing as it falls, like blood drops stretching
+            drip.style.height = (parseFloat(drip.style.height) + 0.05) + 'px';
 
-                // Stretching while falling
-                drip.style.height = (parseFloat(drip.style.height) + 0.1) + 'px';
-
-                // When it hits bottom -> splatter
-                if (parseFloat(drip.style.top) > window.innerHeight - 10) {
-                    drip.classList.add('splatter');
-                    drip.style.width = '30px';
-                    drip.style.height = '8px';
-                    drip.style.top = (window.innerHeight - 8) + 'px';
-
-                    // Remove after splatter effect
-                    setTimeout(() => {
-                        drip.remove();
-                        drips.splice(index, 1);
-                    }, 300);
-                }
+            // Remove when off screen
+            if (parseFloat(drip.style.top) > window.innerHeight) {
+                drip.remove();
+                drips.splice(index, 1);
             }
         });
 
-        // Create new drips if needed
         if (drips.length < maxDrips) {
             createDrip();
         }

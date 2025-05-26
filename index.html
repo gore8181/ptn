@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>NoExtort.org — Combating Sextortion</title>
-  <link rel="stylesheet" href="style.css">
-  <script defer src="script.js"></script>
   <style>
     html {
       scroll-behavior: smooth;
@@ -100,13 +98,26 @@
       background: #000;
       color: #888;
     }
+    #visitor-counter {
+      margin: 2rem auto 1rem auto;
+      max-width: 800px;
+      border: 2px solid #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      background-color: #111;
+    }
   </style>
 </head>
 <body>
+  <section id="visitor-counter" class="fade-in">
+    <h2>Lives Saved</h2>
+    <p>You have visited this site <span id="visit-number">0</span> time(s).</p>
+  </section>
+
   <header class="site-header">
     <nav class="nav">
       <a href="#home" class="logo">NoExtort.org</a>
-      <ul class="nav-links">
+      <ul class="nav-links" style="list-style:none; display:flex; padding:0; margin:0;">
         <li><a href="#what">What is Sextortion?</a></li>
         <li><a href="#protect">Protect Yourself</a></li>
         <li><a href="#victim">If You’re a Victim</a></li>
@@ -114,7 +125,7 @@
         <li><a href="#contribute">Contribute</a></li>
       </ul>
     </nav>
-    <div id="home" class="hero fade-in">
+    <div id="home" class="hero fade-in" style="padding: 4rem 2rem;">
       <h1>Say No to Sextortion</h1>
       <p>Learn to recognize, avoid, and fight back against sextortion.</p>
       <a href="#what" class="btn">Learn More</a>
@@ -182,11 +193,18 @@
   </footer>
 
   <script>
-    const faders = document.querySelectorAll('.fade-in');
-    const options = {
-      threshold: 0.1
-    };
+    // Visitor counter stored in localStorage
+    let visits = localStorage.getItem('visits');
+    if (!visits) {
+      visits = 0;
+    }
+    visits = parseInt(visits) + 1;
+    localStorage.setItem('visits', visits);
+    document.getElementById('visit-number').textContent = visits;
 
+    // Scroll fade-in animations
+    const faders = document.querySelectorAll('.fade-in');
+    const options = { threshold: 0.1 };
     const appearOnScroll = new IntersectionObserver(function(entries, observer) {
       entries.forEach(entry => {
         if (!entry.isIntersecting) return;
@@ -194,7 +212,6 @@
         observer.unobserve(entry.target);
       });
     }, options);
-
     faders.forEach(fadeEl => {
       appearOnScroll.observe(fadeEl);
     });

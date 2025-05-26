@@ -7,27 +7,49 @@
   <link rel="stylesheet" href="style.css">
   <script defer src="script.js"></script>
   <style>
-    /* Animation Styles */
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      background: #111;
+      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    section {
+      padding: 4rem 2rem;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .bg-light {
+      background-color: #222;
+    }
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background: #e91e63;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background 0.3s ease;
+    }
+    .btn:hover {
+      background: #d81b60;
+    }
+    /* Animations */
     .fade-in {
       opacity: 0;
       transform: translateY(20px);
-      animation: fadeInUp 0.8s ease forwards;
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
     }
-
-    .fade-delay-1 { animation-delay: 0.2s; }
-    .fade-delay-2 { animation-delay: 0.4s; }
-    .fade-delay-3 { animation-delay: 0.6s; }
-
-    @keyframes fadeInUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
   </style>
 </head>
 <body>
-  <!-- Header / Navigation -->
   <header class="site-header">
     <nav class="nav">
       <a href="#home" class="logo">NoExtort.org</a>
@@ -38,41 +60,36 @@
         <li><a href="#resources">Resources</a></li>
         <li><a href="#contribute">Contribute</a></li>
       </ul>
-      <button class="nav-toggle" aria-label="toggle navigation">
-        <span class="hamburger"></span>
-      </button>
     </nav>
-    <div id="home" class="hero fade-in fade-delay-1">
+    <div id="home" class="hero fade-in">
       <h1>Say No to Sextortion</h1>
       <p>Learn to recognize, avoid, and fight back against sextortion.</p>
       <a href="#what" class="btn">Learn More</a>
     </div>
   </header>
 
-  <!-- What is Sextortion -->
-  <section id="what" class="section fade-in fade-delay-1">
+  <section id="what" class="section fade-in">
     <h2>What is Sextortion?</h2>
     <p>Sextortion is a form of blackmail where someone threatens to share intimate images or recordings unless demands are met.</p>
     <div class="info-cards">
-      <div class="card fade-in fade-delay-1">
+      <div class="card fade-in">
         <h3>Step 1</h3>
         <p>Perpetrator obtains intimate content.</p>
       </div>
-      <div class="card fade-in fade-delay-2">
+      <div class="card fade-in">
         <h3>Step 2</h3>
         <p>Threats to expose content publicly.</p>
       </div>
-      <div class="card fade-in fade-delay-3">
+      <div class="card fade-in">
         <h3>Step 3</h3>
         <p>Demands payment, images, or other favors.</p>
       </div>
     </div>
   </section>
 
-  <!-- How to Protect Yourself -->
-  <section id="protect" class="section bg-light fade-in fade-delay-1">
+  <section id="protect" class="section bg-light fade-in">
     <h2>Protect Yourself</h2>
-    <ul class="tips">
+    <ul>
       <li>Never share intimate images with strangers.</li>
       <li>Use strong privacy settings.</li>
       <li>Enable two-factor authentication.</li>
@@ -80,10 +97,9 @@
     </ul>
   </section>
 
-  <!-- If You’re a Victim -->
-  <section id="victim" class="section fade-in fade-delay-1">
+  <section id="victim" class="section fade-in">
     <h2>If You’re a Victim</h2>
-    <ol class="steps">
+    <ol>
       <li>Do NOT pay or comply.</li>
       <li>Preserve evidence (screenshots, messages).</li>
       <li>Report to law enforcement.</li>
@@ -92,35 +108,43 @@
     </ol>
   </section>
 
-  <!-- Resources -->
-  <section id="resources" class="section bg-light fade-in fade-delay-1">
+  <section id="resources" class="section bg-light fade-in">
     <h2>Resources</h2>
-    <ul class="resources-list">
-      <li><a href="https://www.fbi.gov">FBI</a></li>
-      <li><a href="https://www.ic3.gov">IC3 (Cyber Crime)</a></li>
-      <li><a href="https://www.rainn.org">RAINN</a></li>
+    <ul>
+      <li><a href="https://www.fbi.gov" target="_blank">FBI</a></li>
+      <li><a href="https://www.ic3.gov" target="_blank">IC3 (Cyber Crime)</a></li>
+      <li><a href="https://www.rainn.org" target="_blank">RAINN</a></li>
       <li><a href="#">Local police contact</a></li>
     </ul>
   </section>
 
-  <!-- Contribute -->
-  <section id="contribute" class="section fade-in fade-delay-1">
+  <section id="contribute" class="section fade-in">
     <h2>Contribute or Volunteer</h2>
     <p>Help spread awareness, volunteer your skills, or share your story anonymously.</p>
     <a href="#" class="btn">Get Involved</a>
   </section>
 
-  <!-- Footer -->
-  <footer class="site-footer fade-in fade-delay-1">
+  <footer class="site-footer fade-in">
     <p>&copy; 2025 NoExtort.org. All rights reserved.</p>
   </footer>
 
   <script>
-    // Toggle mobile navigation
-    const navToggle = document.querySelector('.nav-toggle');
-    const navLinks = document.querySelector('.nav-links');
-    navToggle.addEventListener('click', () => {
-      navLinks.classList.toggle('nav-open');
+    // Smooth reveal animations on scroll
+    const faders = document.querySelectorAll('.fade-in');
+    const options = {
+      threshold: 0.1
+    };
+
+    const appearOnScroll = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      });
+    }, options);
+
+    faders.forEach(fadeEl => {
+      appearOnScroll.observe(fadeEl);
     });
   </script>
 </body>

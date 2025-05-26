@@ -16,11 +16,16 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 0;
+      text-align: center;
     }
     section {
       padding: 4rem 2rem;
-      max-width: 1000px;
-      margin: auto;
+      max-width: 800px;
+      margin: 2rem auto;
+      background-color: #1a1a1a;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      transition: transform 0.3s ease, opacity 0.3s ease;
     }
     .bg-light {
       background-color: #222;
@@ -40,12 +45,52 @@
     /* Animations */
     .fade-in {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(30px);
       transition: opacity 0.6s ease-out, transform 0.6s ease-out;
     }
     .fade-in.visible {
       opacity: 1;
       transform: translateY(0);
+    }
+    .info-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .card {
+      background: #222;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    }
+    ul, ol {
+      text-align: left;
+      max-width: 600px;
+      margin: 1rem auto;
+    }
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: #000;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .nav a {
+      color: #fff;
+      margin: 0 0.5rem;
+      text-decoration: none;
+    }
+    .nav .logo {
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+    .site-footer {
+      padding: 2rem;
+      background: #000;
+      color: #888;
     }
   </style>
 </head>
@@ -68,7 +113,7 @@
     </div>
   </header>
 
-  <section id="what" class="section fade-in">
+  <section id="what" class="fade-in">
     <h2>What is Sextortion?</h2>
     <p>Sextortion is a form of blackmail where someone threatens to share intimate images or recordings unless demands are met.</p>
     <div class="info-cards">
@@ -87,7 +132,7 @@
     </div>
   </section>
 
-  <section id="protect" class="section bg-light fade-in">
+  <section id="protect" class="bg-light fade-in">
     <h2>Protect Yourself</h2>
     <ul>
       <li>Never share intimate images with strangers.</li>
@@ -97,7 +142,7 @@
     </ul>
   </section>
 
-  <section id="victim" class="section fade-in">
+  <section id="victim" class="fade-in">
     <h2>If You’re a Victim</h2>
     <ol>
       <li>Do NOT pay or comply.</li>
@@ -108,7 +153,7 @@
     </ol>
   </section>
 
-  <section id="resources" class="section bg-light fade-in">
+  <section id="resources" class="bg-light fade-in">
     <h2>Resources</h2>
     <ul>
       <li><a href="https://www.fbi.gov" target="_blank">FBI</a></li>
@@ -118,7 +163,7 @@
     </ul>
   </section>
 
-  <section id="contribute" class="section fade-in">
+  <section id="contribute" class="fade-in">
     <h2>Contribute or Volunteer</h2>
     <p>Help spread awareness, volunteer your skills, or share your story anonymously.</p>
     <a href="#" class="btn">Get Involved</a>

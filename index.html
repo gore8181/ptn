@@ -1,162 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>hang.rip</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body {
-      background-color: #000;
-      color: #808080;
-      font-family: monospace;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      width: 100vw;
-      text-align: center;
-      flex-direction: column;
-      overflow: hidden;
-      cursor: crosshair;
-    }
-    canvas {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      z-index: 0;
-    }
-    pre {
-      margin-bottom: 20px;
-      z-index: 1;
-      position: relative;
-      white-space: pre-wrap;
-    }
-    .links {
-      display: flex;
-      gap: 20px;
-      z-index: 1;
-      position: relative;
-    }
-    .links a {
-      display: inline-block;
-      border: 2px solid #808080;
-      border-radius: 8px;
-      padding: 10px 20px;
-      text-decoration: none;
-      color: #808080;
-      font-size: 1.2em;
-      transition: all 0.3s ease;
-    }
-    .links a:hover {
-      border-color: #ffffff;
-      color: #ffffff;
-      background-color: rgba(255, 255, 255, 0.05);
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-    }
-    .popup {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.95);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      transition: opacity 1s ease;
-      opacity: 1;
-    }
-    .popup.fade-out { opacity: 0; pointer-events: none; }
-    .enter-btn {
-      background: transparent;
-      border: 2px solid #808080;
-      color: #808080;
-      padding: 10px 20px;
-      cursor: crosshair;
-      font-family: monospace;
-      font-size: 1.2em;
-      transition: 0.3s ease;
-    }
-    .enter-btn:hover { background: #808080; color: black; }
-    .no-copy {
-      user-select: none;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      font-weight: bold;
-    }
-    .links a[href*="luri.ng"] { font-weight: bold; }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NoExtort.org — Combating Sextortion</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
 </head>
 <body>
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <nav class="nav">
+      <a href="#home" class="logo">NoExtort.org</a>
+      <ul class="nav-links">
+        <li><a href="#what">What is Sextortion?</a></li>
+        <li><a href="#protect">Protect Yourself</a></li>
+        <li><a href="#victim">If You’re a Victim</a></li>
+        <li><a href="#resources">Resources</a></li>
+        <li><a href="#contribute">Contribute</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="toggle navigation">
+        <span class="hamburger"></span>
+      </button>
+    </nav>
+    <div id="home" class="hero">
+      <h1>Say No to Sextortion</h1>
+      <p>Learn to recognize, avoid, and fight back against sextortion.</p>
+      <a href="#what" class="btn">Learn More</a>
+    </div>
+  </header>
 
-  <canvas id="asciiBackground"></canvas>
+  <!-- What is Sextortion -->
+  <section id="what" class="section">
+    <h2>What is Sextortion?</h2>
+    <p>Sextortion is a form of blackmail where someone threatens to share intimate images or recordings unless demands are met.</p>
+    <div class="info-cards">
+      <div class="card">
+        <h3>Step 1</h3>
+        <p>Perpetrator obtains intimate content.</p>
+      </div>
+      <div class="card">
+        <h3>Step 2</h3>
+        <p>Threats to expose content publicly.</p>
+      </div>
+      <div class="card">
+        <h3>Step 3</h3>
+        <p>Demands payment, images, or other favors.</p>
+      </div>
+    </div>
+  </section>
 
-  <!-- Popup overlay -->
-  <div class="popup" id="popup">
-    <button class="enter-btn" onclick="closePopup()">ENTER</button>
-  </div>
+  <!-- How to Protect Yourself -->
+  <section id="protect" class="section bg-light">
+    <h2>Protect Yourself</h2>
+    <ul class="tips">
+      <li>Never share intimate images with strangers.</li>
+      <li>Use strong privacy settings.</li>
+      <li>Enable two-factor authentication.</li>
+      <li>Be wary of unsolicited requests.</li>
+    </ul>
+  </section>
 
-  <!-- Main ASCII content -->
-  <pre>
-                                                   888     .d888 
-                                                   888    d88P"  
-                                                   888    888    
-88888b.d88b.   .d88b.   .d88b.      888  888  888 888888 888888 
-888 "888 "88b d8P  Y8b d88""88b     888  888  888 888    888    
-888  888  888 88888888 888  888     888  888  888 888    888    
-888  888  888 Y8b.     Y88..88P d8b Y88b 888 d88P Y88b.  888    
-888  888  888  "Y8888   "Y88P"  Y8P  "Y8888888P"   "Y888 888    
+  <!-- If You’re a Victim -->
+  <section id="victim" class="section">
+    <h2>If You’re a Victim</h2>
+    <ol class="steps">
+      <li>Do NOT pay or comply.</li>
+      <li>Preserve evidence (screenshots, messages).</li>
+      <li>Report to law enforcement.</li>
+      <li>Contact platform support.</li>
+      <li>Seek trusted support (friends, counselors).</li>
+    </ol>
+  </section>
 
-                <span class="no-copy">meo.wtf</span>
-  </pre>
+  <!-- Resources -->
+  <section id="resources" class="section bg-light">
+    <h2>Resources</h2>
+    <ul class="resources-list">
+      <li><a href="https://www.fbi.gov">FBI</a></li>
+      <li><a href="https://www.ic3.gov">IC3 (Cyber Crime)</a></li>
+      <li><a href="https://www.rainn.org">RAINN</a></li>
+      <li><a href="#">Local police contact</a></li>
+    </ul>
+  </section>
 
-  <!-- Navigation Links -->
-  <div class="links">
-    <a href="https://luri.ng/register">Register</a>
-    <a href="https://discord.gg/raid">Join Discord</a>
-    <a href="features.html">Features</a>
-  </div>
+  <!-- Contribute -->
+  <section id="contribute" class="section">
+    <h2>Contribute or Volunteer</h2>
+    <p>Help spread awareness, volunteer your skills, or share your story anonymously.</p>
+    <a href="#" class="btn">Get Involved</a>
+  </section>
 
-  <script>
-    function closePopup() {
-      const popup = document.getElementById('popup');
-      popup.classList.add('fade-out');
-      setTimeout(() => popup.style.display = 'none', 1000);
-    }
-
-    // ASCII Rain Animation
-    const canvas = document.getElementById('asciiBackground');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const letters = "01#$%&@*+=-";
-    const fontSize = 16;
-    const columns = canvas.width / fontSize;
-    const drops = Array(Math.floor(columns)).fill(1);
-
-    function draw() {
-      ctx.fillStyle = "rgba(0,0,0,0.05)";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "#808080";
-      ctx.font = fontSize + "px monospace";
-
-      for (let i = 0; i < drops.length; i++) {
-        const text = letters[Math.floor(Math.random() * letters.length)];
-        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-        drops[i]++;
-      }
-    }
-    setInterval(draw, 50);
-
-    window.addEventListener('resize', () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      drops.length = Math.floor(canvas.width / fontSize);
-      drops.fill(1);
-    });
-  </script>
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>&copy; 2025 NoExtort.org. All rights reserved.</p>
+  </footer>
 </body>
 </html>
+
+/* style.css */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: #eee;
+  background-color: #111;
+  scroll-behavior: smooth;
+}
+
+.site-header { position: relative; }
+.nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; background: #222; }
+.nav-links { list-style: none; display: flex; gap: 1rem; }
+.nav-links a { color: #eee; text-decoration: none; }
+.logo { font-size: 1.5rem; color: #fff; text-decoration: none; }
+.nav-toggle { display: none; background: none; border: none; }
+.hamburger { width: 25px; height: 3px; background: #fff; display: block; position: relative; }
+.hamburger::after, .hamburger::before { content: ''; position: absolute; width: 25px; height: 3px; background: #fff; }
+.hamburger::before { top: -8px; }
+.hamburger::after { top: 8px; }
+
+.hero { text-align: center; padding: 4rem 2rem; background: url('hero-bg.jpg') center/cover no-repeat; }
+.hero h1 { font-size: 3rem; margin-bottom: 1rem; }
+.hero p { font-size: 1.2rem; margin-bottom: 2rem; }
+.btn { display: inline-block; padding: 0.75rem 1.5rem; background: #e91e63; color: #fff; text-decoration: none; border-radius: 4px; transition: background 0.3s; }
+.btn:hover { background: #d81b60; }
+
+.section { padding: 3rem 2rem; }
+.bg-light { background-color: #1a1a1a; }
+.info-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+.card { background: #222; padding: 1.5rem; border-radius: 8px; text-align: center; }
+.tips, .resources-list { list-style: none; padding: 0; }
+.tips li, .resources-list li { margin: 0.75rem 0; }
+.steps { counter-reset: step; }
+.steps li { position: relative; margin: 1rem 0 1rem 2rem; }
+.steps li::before { counter-increment: step; content: counter(step); position: absolute; left: -2rem; background: #e91e63; width: 1.5rem; height: 1.5rem; border-radius: 50%; text-align: center; line-height: 1.5rem; }
+
+.site-footer { text-align: center; padding: 2rem; background: #222; font-size: 0.9rem; }
+
+/* script.js */
+// Toggle mobile navigation
+const navToggle = document.querySelector('.nav-toggle');
+const navLinks = document.querySelector('.nav-links');
+navToggle.addEventListener('click', () => {
+  navLinks.classList.toggle('nav-open');
+});
+
+// Smooth reveal on scroll
+document.addEventListener('DOMContentLoaded', () => {
+  const sections = document.querySelectorAll('.section, .hero');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('reveal');
+      }
+    });
+  }, { threshold: 0.1 });
+  sections.forEach(sec => observer.observe(sec));
+});
+
+/* Add reveal animations */
+.reveal { opacity: 1; transform: none; transition: all 0.6s ease-in-out; }
+.section, .hero { opacity: 0; transform: translateY(30px); }

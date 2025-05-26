@@ -6,6 +6,25 @@
   <title>NoExtort.org — Combating Sextortion</title>
   <link rel="stylesheet" href="style.css">
   <script defer src="script.js"></script>
+  <style>
+    /* Animation Styles */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s ease forwards;
+    }
+
+    .fade-delay-1 { animation-delay: 0.2s; }
+    .fade-delay-2 { animation-delay: 0.4s; }
+    .fade-delay-3 { animation-delay: 0.6s; }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
 </head>
 <body>
   <!-- Header / Navigation -->
@@ -23,7 +42,7 @@
         <span class="hamburger"></span>
       </button>
     </nav>
-    <div id="home" class="hero">
+    <div id="home" class="hero fade-in fade-delay-1">
       <h1>Say No to Sextortion</h1>
       <p>Learn to recognize, avoid, and fight back against sextortion.</p>
       <a href="#what" class="btn">Learn More</a>
@@ -31,19 +50,19 @@
   </header>
 
   <!-- What is Sextortion -->
-  <section id="what" class="section">
+  <section id="what" class="section fade-in fade-delay-1">
     <h2>What is Sextortion?</h2>
     <p>Sextortion is a form of blackmail where someone threatens to share intimate images or recordings unless demands are met.</p>
     <div class="info-cards">
-      <div class="card">
+      <div class="card fade-in fade-delay-1">
         <h3>Step 1</h3>
         <p>Perpetrator obtains intimate content.</p>
       </div>
-      <div class="card">
+      <div class="card fade-in fade-delay-2">
         <h3>Step 2</h3>
         <p>Threats to expose content publicly.</p>
       </div>
-      <div class="card">
+      <div class="card fade-in fade-delay-3">
         <h3>Step 3</h3>
         <p>Demands payment, images, or other favors.</p>
       </div>
@@ -51,7 +70,7 @@
   </section>
 
   <!-- How to Protect Yourself -->
-  <section id="protect" class="section bg-light">
+  <section id="protect" class="section bg-light fade-in fade-delay-1">
     <h2>Protect Yourself</h2>
     <ul class="tips">
       <li>Never share intimate images with strangers.</li>
@@ -62,7 +81,7 @@
   </section>
 
   <!-- If You’re a Victim -->
-  <section id="victim" class="section">
+  <section id="victim" class="section fade-in fade-delay-1">
     <h2>If You’re a Victim</h2>
     <ol class="steps">
       <li>Do NOT pay or comply.</li>
@@ -74,7 +93,7 @@
   </section>
 
   <!-- Resources -->
-  <section id="resources" class="section bg-light">
+  <section id="resources" class="section bg-light fade-in fade-delay-1">
     <h2>Resources</h2>
     <ul class="resources-list">
       <li><a href="https://www.fbi.gov">FBI</a></li>
@@ -85,78 +104,24 @@
   </section>
 
   <!-- Contribute -->
-  <section id="contribute" class="section">
+  <section id="contribute" class="section fade-in fade-delay-1">
     <h2>Contribute or Volunteer</h2>
     <p>Help spread awareness, volunteer your skills, or share your story anonymously.</p>
     <a href="#" class="btn">Get Involved</a>
   </section>
 
   <!-- Footer -->
-  <footer class="site-footer">
+  <footer class="site-footer fade-in fade-delay-1">
     <p>&copy; 2025 NoExtort.org. All rights reserved.</p>
   </footer>
+
+  <script>
+    // Toggle mobile navigation
+    const navToggle = document.querySelector('.nav-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    navToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('nav-open');
+    });
+  </script>
 </body>
 </html>
-
-/* style.css */
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  color: #eee;
-  background-color: #111;
-  scroll-behavior: smooth;
-}
-
-.site-header { position: relative; }
-.nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; background: #222; }
-.nav-links { list-style: none; display: flex; gap: 1rem; }
-.nav-links a { color: #eee; text-decoration: none; }
-.logo { font-size: 1.5rem; color: #fff; text-decoration: none; }
-.nav-toggle { display: none; background: none; border: none; }
-.hamburger { width: 25px; height: 3px; background: #fff; display: block; position: relative; }
-.hamburger::after, .hamburger::before { content: ''; position: absolute; width: 25px; height: 3px; background: #fff; }
-.hamburger::before { top: -8px; }
-.hamburger::after { top: 8px; }
-
-.hero { text-align: center; padding: 4rem 2rem; background: url('hero-bg.jpg') center/cover no-repeat; }
-.hero h1 { font-size: 3rem; margin-bottom: 1rem; }
-.hero p { font-size: 1.2rem; margin-bottom: 2rem; }
-.btn { display: inline-block; padding: 0.75rem 1.5rem; background: #e91e63; color: #fff; text-decoration: none; border-radius: 4px; transition: background 0.3s; }
-.btn:hover { background: #d81b60; }
-
-.section { padding: 3rem 2rem; }
-.bg-light { background-color: #1a1a1a; }
-.info-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
-.card { background: #222; padding: 1.5rem; border-radius: 8px; text-align: center; }
-.tips, .resources-list { list-style: none; padding: 0; }
-.tips li, .resources-list li { margin: 0.75rem 0; }
-.steps { counter-reset: step; }
-.steps li { position: relative; margin: 1rem 0 1rem 2rem; }
-.steps li::before { counter-increment: step; content: counter(step); position: absolute; left: -2rem; background: #e91e63; width: 1.5rem; height: 1.5rem; border-radius: 50%; text-align: center; line-height: 1.5rem; }
-
-.site-footer { text-align: center; padding: 2rem; background: #222; font-size: 0.9rem; }
-
-/* script.js */
-// Toggle mobile navigation
-const navToggle = document.querySelector('.nav-toggle');
-const navLinks = document.querySelector('.nav-links');
-navToggle.addEventListener('click', () => {
-  navLinks.classList.toggle('nav-open');
-});
-
-// Smooth reveal on scroll
-document.addEventListener('DOMContentLoaded', () => {
-  const sections = document.querySelectorAll('.section, .hero');
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('reveal');
-      }
-    });
-  }, { threshold: 0.1 });
-  sections.forEach(sec => observer.observe(sec));
-});
-
-/* Add reveal animations */
-.reveal { opacity: 1; transform: none; transition: all 0.6s ease-in-out; }
-.section, .hero { opacity: 0; transform: translateY(30px); }

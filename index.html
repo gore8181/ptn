@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>antiextort</title>
-  <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap" rel="stylesheet" />
   <style>
     body {
       background-color: #000;
@@ -63,14 +63,29 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      color: #fff;
-      font-size: 2.5rem;
       cursor: pointer;
       z-index: 1000;
       user-select: none;
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-      transition: opacity 0.5s ease;
+
+      /* Start visible with full opacity and scale 1 */
+      opacity: 1;
+      transform: scale(1);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    #overlay.hidden {
+      opacity: 0;
+      transform: scale(1.1);
+      pointer-events: none;
+    }
+
+    #overlay img {
+      max-width: 250px;
+      max-height: 250px;
+      user-select: none;
+      pointer-events: none;
     }
 
     /* Blur effect on body content when overlay is visible */
@@ -83,10 +98,12 @@
   </style>
 </head>
 <body class="blur">
-  <div id="overlay">Click to Enter</div>
+  <div id="overlay" title="Click to Enter">
+    <img src="download (2).png" alt="Click to Enter" />
+  </div>
 
   <div id="content">
-    <img src="download (2).png" alt="Fairy Twins" />
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Twin_fairies_silhouette.png/200px-Twin_fairies_silhouette.png" alt="Fairy Twins" />
     <h1><a href="https://example.com">antiextort</a></h1>
     <div class="names">Emact, Krone, Tobagoa, Rifle, Month, Atlas, 561, V, Romance, Neptunian, Kami</div>
     <div class="channel-announcement">Our Old Channel Got Termed, So Join Our New One!</div>
@@ -98,11 +115,13 @@
     const body = document.body;
 
     overlay.addEventListener('click', () => {
-      overlay.style.opacity = '0';
+      // Add hidden class to trigger fade and scale animation
+      overlay.classList.add('hidden');
+      // Remove blur from content after animation ends
       setTimeout(() => {
         overlay.style.display = 'none';
         body.classList.remove('blur');
-      }, 500);
+      }, 600); // Match the CSS transition duration
     });
   </script>
 </body>

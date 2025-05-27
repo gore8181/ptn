@@ -11,6 +11,10 @@
       font-family: 'UnifrakturMaguntia', cursive;
       text-align: center;
       padding: 50px 20px;
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
     }
 
     a {
@@ -50,13 +54,56 @@
       max-width: 150px;
       margin-bottom: 20px;
     }
+
+    /* Overlay styles */
+    #overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      font-size: 2.5rem;
+      cursor: pointer;
+      z-index: 1000;
+      user-select: none;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: opacity 0.5s ease;
+    }
+
+    /* Blur effect on body content when overlay is visible */
+    body.blur #content {
+      filter: blur(8px);
+      transition: filter 0.5s ease;
+      pointer-events: none;
+      user-select: none;
+    }
   </style>
 </head>
-<body>
-  <img src="download (2).png" alt="Fairy Twins" />
-  <h1><a href="https://example.com">antiextort</a></h1>
-  <div class="names">Emact, Krone, Tobagoa, Rifle, Month, Atlas, 561, V, Romance, Neptunian, Kami</div>
-  <div class="channel-announcement">Our Old Channel Got Termed, So Join Our New One!</div>
-  <div class="channel-link"><a href="https://example.com/channel">Our New Channel</a></div>
+<body class="blur">
+  <div id="overlay">Click to Enter</div>
+
+  <div id="content">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Twin_fairies_silhouette.png/200px-Twin_fairies_silhouette.png" alt="Fairy Twins" />
+    <h1><a href="https://example.com">antiextort</a></h1>
+    <div class="names">Emact, Krone, Tobagoa, Rifle, Month, Atlas, 561, V, Romance, Neptunian, Kami</div>
+    <div class="channel-announcement">Our Old Channel Got Termed, So Join Our New One!</div>
+    <div class="channel-link"><a href="https://example.com/channel">Our New Channel</a></div>
+  </div>
+
+  <script>
+    const overlay = document.getElementById('overlay');
+    const body = document.body;
+
+    overlay.addEventListener('click', () => {
+      overlay.style.opacity = '0';
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        body.classList.remove('blur');
+      }, 500);
+    });
+  </script>
 </body>
 </html>

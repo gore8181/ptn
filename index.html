@@ -1,479 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Crypto Gambling & Stock Market Simulator</title>
-<style>
-  /* Basic reset and styling */
-  body {
-    margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #121212; color: #eee; display: flex; flex-direction: column; min-height: 100vh;
-  }
-  header {
-    background: #1f1f1f; padding: 1rem;
-    text-align: center; font-size: 1.5rem; font-weight: bold;
-    border-bottom: 2px solid #444;
-  }
-  main {
-    flex: 1;
-    padding: 1rem;
-    max-width: 900px;
-    margin: auto;
-  }
-  h2 {
-    margin-top: 0;
-  }
-  button {
-    cursor: pointer;
-    background: #2e8bff;
-    border: none;
-    border-radius: 4px;
-    color: white;
-    padding: 0.4rem 1rem;
-    font-size: 1rem;
-    margin: 0.2rem;
-    transition: background 0.3s ease;
-  }
-  button:hover {
-    background: #0066ff;
-  }
-  select, input[type=number] {
-    font-size: 1rem;
-    padding: 0.3rem 0.5rem;
-    border-radius: 4px;
-    border: none;
-    margin: 0 0.5rem 0.5rem 0;
-  }
-  .balances {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-  .balance {
-    background: #222;
-    padding: 0.8rem;
-    border-radius: 6px;
-    flex: 1 1 120px;
-    text-align: center;
-  }
-  .selected-crypto {
-    background: #0055ff;
-  }
-  .game, .stocks, .portfolio {
-    background: #222;
-    margin-top: 1.5rem;
-    padding: 1rem;
-    border-radius: 8px;
-  }
-  .result {
-    margin-top: 1rem;
-    font-weight: bold;
-  }
-  .stock-list, .portfolio-list {
-    max-height: 200px;
-    overflow-y: auto;
-    margin-top: 0.8rem;
-  }
-  .stock-item, .portfolio-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.3rem 0;
-    border-bottom: 1px solid #444;
-  }
-  .stock-item:last-child, .portfolio-item:last-child {
-    border-bottom: none;
-  }
-  .flex-row {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  .flex-row > * {
-    margin-right: 0.5rem;
-  }
-  @media (max-width: 600px) {
-    .balances {
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Crypto Gambling & Stock Market Simulator</title>
+  <style>
+    /* Reset and global styles */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #121212;
+      color: #eee;
+      display: flex;
       flex-direction: column;
-    }
-  }
-  /* Animations */
-  .dice-roll, .coin-flip, .slot-spin {
-    font-size: 3rem;
-    margin-top: 1rem;
-    height: 3.5rem;
-    user-select: none;
-  }
-</style>
-</head>
-<body>
-<header>Crypto Gambling & Stock Market Simulator</header>
-<main id="root"></main>
-
-<!-- React and ReactDOM from CDN -->
-<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-
-<!-- Babel for JSX -->
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-<script type="text/babel">
-
-const { useState, useEffect, useRef } = React;
-
-const CRYPTOS = ['BTC', 'SOL', 'LTC', 'ETH'];
-const MAX_BALANCE = 100;
-
-const INITIAL_BALANCES = () => {
-  // Initialize balances to max on first load or from localStorage
-  let saved = localStorage.getItem('cryptoBalances');
-  if (saved) {
-    return JSON.parse(saved);
-  }
-  const balances = {};
-  CRYPTOS.forEach(c => balances[c] = MAX_BALANCE);
-  localStorage.setItem('cryptoBalances', JSON.stringify(balances));
-  return balances;
-};
-
-const INITIAL_PORTFOLIO = () => {
-  let saved = localStorage.getItem('portfolio');
-  if (saved) return JSON.parse(saved);
-  const portfolio = {}; // e.g. { 'AAPL': 10, 'TSLA': 0 }
-  localStorage.setItem('portfolio', JSON.stringify(portfolio));
-  return portfolio;
-};
-
-// Fake stocks data initialization
-const STOCK_SYMBOLS = [
-  { symbol: 'ACME', name: 'Acme Corp' },
-  { symbol: 'TITAN', name: 'Titan Industries' },
-  { symbol: 'ZEUS', name: 'Zeus Power' },
-  { symbol: 'NOVA', name: 'Nova Technologies' },
-  { symbol: 'ORION', name: 'Orion Motors' }
-];
-
-// Start prices around random 10-50$
-function generateInitialPrices() {
-  const prices = {};
-  STOCK_SYMBOLS.forEach(s => {
-    prices[s.symbol] = (Math.random() * 40 + 10).toFixed(2);
-  });
-  return prices;
-}
-
-// Sound effects (optional, can be toggled on/off)
-function playSound(type) {
-  if (!window.soundsEnabled) return;
-  let audio;
-  switch(type) {
-    case 'bet': 
-      audio = new Audio('https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg');
-      break;
-    case 'win':
-      audio = new Audio('https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg');
-      break;
-    default:
-      return;
-  }
-  audio.volume = 0.3;
-  audio.play();
-}
-
-function App() {
-  // Balances state
-  const [balances, setBalances] = useState(INITIAL_BALANCES);
-  const [selectedCrypto, setSelectedCrypto] = useState(CRYPTOS[0]);
-  const [message, setMessage] = useState('');
-  const [gameInProgress, setGameInProgress] = useState(false);
-
-  // Stock market states
-  const [stockPrices, setStockPrices] = useState(generateInitialPrices);
-  const [portfolio, setPortfolio] = useState(INITIAL_PORTFOLIO);
-  const [selectedStock, setSelectedStock] = useState(STOCK_SYMBOLS[0].symbol);
-  const [stockTradeAmount, setStockTradeAmount] = useState(0);
-  const [stockTradeType, setStockTradeType] = useState('buy'); // buy or sell
-
-  // Game states
-  // Dice game
-  const [diceBet, setDiceBet] = useState(0);
-  const [diceThreshold, setDiceThreshold] = useState(4); // roll above threshold to win
-  const [diceRollResult, setDiceRollResult] = useState(null);
-  const [diceRolling, setDiceRolling] = useState(false);
-
-  // Coin flip
-  const [coinBet, setCoinBet] = useState(0);
-  const [coinChoice, setCoinChoice] = useState('heads');
-  const [coinFlipResult, setCoinFlipResult] = useState(null);
-  const [coinFlipping, setCoinFlipping] = useState(false);
-
-  // Slot machine
-  const [slotBet, setSlotBet] = useState(0);
-  const [slotResult, setSlotResult] = useState(null);
-  const [slotSpinning, setSlotSpinning] = useState(false);
-
-  // Leaderboard (top portfolio values or winnings) - bonus - saved in localStorage
-  const [leaderboard, setLeaderboard] = useState(() => {
-    let saved = localStorage.getItem('leaderboard');
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  // Update localStorage whenever balances or portfolio changes
-  useEffect(() => {
-    localStorage.setItem('cryptoBalances', JSON.stringify(balances));
-  }, [balances]);
-
-  useEffect(() => {
-    localStorage.setItem('portfolio', JSON.stringify(portfolio));
-    updateLeaderboard();
-  }, [portfolio]);
-
-  useEffect(() => {
-    localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
-  }, [leaderboard]);
-
-  // Update stock prices randomly every 5 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setStockPrices(oldPrices => {
-        const newPrices = {...oldPrices};
-        STOCK_SYMBOLS.forEach(stock => {
-          let price = parseFloat(newPrices[stock.symbol]);
-          // Randomly change price by -5% to +5%
-          const changePercent = (Math.random() - 0.5) * 0.1; // -0.05 to +0.05
-          price = price * (1 + changePercent);
-          // Clamp price between 5 and 100
-          price = Math.min(Math.max(price, 5), 100);
-          newPrices[stock.symbol] = price.toFixed(2);
-        });
-        return newPrices;
-      });
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Calculate total portfolio value in selected crypto
-  const portfolioValue = Object.entries(portfolio).reduce((acc, [symbol, qty]) => {
-    const price = parseFloat(stockPrices[symbol]) || 0;
-    return acc + price * qty;
-  }, 0);
-
-  // Update leaderboard: top 5 portfolios by value
-  function updateLeaderboard() {
-    const currentValue = portfolioValue + balances[selectedCrypto];
-    const name = "You"; // Single user demo
-    const newEntry = { name, value: currentValue.toFixed(2), crypto: selectedCrypto };
-
-    let lb = [...leaderboard];
-    // Remove previous entry for this user + crypto
-    lb = lb.filter(e => !(e.name === name && e.crypto === selectedCrypto));
-    lb.push(newEntry);
-    lb.sort((a,b) => parseFloat(b.value) - parseFloat(a.value));
-    if (lb.length > 5) lb = lb.slice(0,5);
-    setLeaderboard(lb);
-  }
-
-  // Utility: update balance for a crypto with limits 0..MAX_BALANCE
-  function updateBalance(crypto, newAmount) {
-    newAmount = Math.min(Math.max(newAmount, 0), MAX_BALANCE);
-    setBalances(b => ({ ...b, [crypto]: newAmount }));
-  }
-
-  // GAME LOGIC
-
-  // 1. Dice game
-  async function playDice() {
-    if (gameInProgress) return;
-    if (diceBet <= 0) {
-      setMessage('Please enter a valid dice bet amount.');
-      return;
-    }
-    if (diceBet > balances[selectedCrypto]) {
-      setMessage('Insufficient balance for dice bet.');
-      return;
-    }
-    setMessage('');
-    setGameInProgress(true);
-    setDiceRolling(true);
-    playSound('bet');
-
-    // Simulate dice roll animation
-    let roll = 1;
-    for (let i = 0; i < 15; i++) {
-      roll = Math.floor(Math.random() * 6) + 1;
-      setDiceRollResult(roll);
-      await new Promise(r => setTimeout(r, 100));
+      min-height: 100vh;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    setDiceRolling(false);
-
-    // Deduct bet
-    updateBalance(selectedCrypto, balances[selectedCrypto] - diceBet);
-
-    if (roll > diceThreshold) {
-      // Win - payout 2x bet
-      const winAmount = diceBet * 2;
-      updateBalance(selectedCrypto, balances[selectedCrypto] + winAmount);
-      setMessage(`Dice roll: ${roll} - You WIN $${winAmount.toFixed(2)} ${selectedCrypto}!`);
-      playSound('win');
-    } else {
-      setMessage(`Dice roll: ${roll} - You lose your bet.`);
-    }
-    setGameInProgress(false);
-  }
-
-  // 2. Coin flip
-  async function playCoinFlip() {
-    if (gameInProgress) return;
-    if (coinBet <= 0) {
-      setMessage('Please enter a valid coin flip bet amount.');
-      return;
-    }
-    if (coinBet > balances[selectedCrypto]) {
-      setMessage('Insufficient balance for coin flip bet.');
-      return;
-    }
-    setMessage('');
-    setGameInProgress(true);
-    setCoinFlipping(true);
-    playSound('bet');
-
-    // Animate coin flip
-    const flips = ['heads', 'tails'];
-    let result = 'heads';
-    for (let i = 0; i < 12; i++) {
-      result = flips[Math.floor(Math.random() * 2)];
-      setCoinFlipResult(result);
-      await new Promise(r => setTimeout(r, 150));
+    header {
+      background-color: #1f1f1f;
+      border-bottom: 2px solid #444;
+      padding: 1.25rem 2rem;
+      font-weight: 700;
+      font-size: 1.75rem;
+      text-align: center;
+      user-select: none;
+      letter-spacing: 0.05em;
+      box-shadow: inset 0 -2px 0 #0055ff;
     }
 
-    setCoinFlipping(false);
-
-    // Deduct bet
-    updateBalance(selectedCrypto, balances[selectedCrypto] - coinBet);
-
-    if (result === coinChoice) {
-      // Win - payout 2x bet
-      const winAmount = coinBet * 2;
-      updateBalance(selectedCrypto, balances[selectedCrypto] + winAmount);
-      setMessage(`Coin flip: ${result} - You WIN $${winAmount.toFixed(2)} ${selectedCrypto}!`);
-      playSound('win');
-    } else {
-      setMessage(`Coin flip: ${result} - You lose your bet.`);
-    }
-    setGameInProgress(false);
-  }
-
-  // 3. Slot machine
-  const slotSymbols = ['🍒', '🍋', '⭐'];
-  async function playSlotMachine() {
-    if (gameInProgress) return;
-    if (slotBet <= 0) {
-      setMessage('Please enter a valid slot bet amount.');
-      return;
-    }
-    if (slotBet > balances[selectedCrypto]) {
-      setMessage('Insufficient balance for slot machine bet.');
-      return;
-    }
-    setMessage('');
-    setGameInProgress(true);
-    setSlotSpinning(true);
-    playSound('bet');
-
-    // Animate slot reels spinning
-    const spins = 20;
-    let reels = ['', '', ''];
-    for (let i = 0; i < spins; i++) {
-      reels = reels.map(() => slotSymbols[Math.floor(Math.random() * slotSymbols.length)]);
-      setSlotResult(reels);
-      await new Promise(r => setTimeout(r, 100));
-    }
-    setSlotSpinning(false);
-
-    // Deduct bet
-    updateBalance(selectedCrypto, balances[selectedCrypto] - slotBet);
-
-    // Evaluate payout
-    let payout = 0;
-    if (reels[0] === reels[1] && reels[1] === reels[2]) {
-      // 3 matching symbols payout 5x bet
-      payout = slotBet * 5;
-    } else if (reels[0] === reels[1] || reels[1] === reels[2] || reels[0] === reels[2]) {
-      // 2 matching symbols payout 2x bet
-      payout = slotBet * 2;
+    main {
+      flex-grow: 1;
+      max-width: 900px;
+      margin: 1.5rem auto 2rem;
+      padding: 1rem 2rem;
+      background-color: #222;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 85, 255, 0.3);
     }
 
-    if (payout > 0) {
-      updateBalance(selectedCrypto, balances[selectedCrypto] + payout);
-      setMessage(`Slot result: ${reels.join(' ')} - You WIN $${payout.toFixed(2)} ${selectedCrypto}!`);
-      playSound('win');
-    } else {
-      setMessage(`Slot result: ${reels.join(' ')} - No win, try again.`);
+    h2 {
+      margin-top: 0;
+      color: #0055ff;
+      letter-spacing: 0.03em;
+      font-weight: 600;
+      margin-bottom: 1rem;
     }
-    setGameInProgress(false);
-  }
 
-  // Withdrawal simulation - resets chosen crypto balance to zero with fake success message
-  function withdrawCrypto() {
-    if (balances[selectedCrypto] <= 0) {
-      setMessage(`No balance to withdraw for ${selectedCrypto}.`);
-      return;
+    /* Layout helpers */
+    .flex-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
     }
-    setMessage(`Withdrawing ${balances[selectedCrypto].toFixed(2)} ${selectedCrypto}...`);
-    setTimeout(() => {
-      updateBalance(selectedCrypto, 0);
-      setMessage(`Withdrawal of ${selectedCrypto} successful! Balance reset to zero.`);
-    }, 1500);
-  }
+    .flex-row > * {
+      flex-shrink: 0;
+    }
 
-  // Stock market buy/sell
-  function executeStockTrade() {
-    const amount = Number(stockTradeAmount);
-    if (amount <= 0) {
-      setMessage('Enter a valid amount of shares to trade.');
-      return;
+    /* Buttons */
+    button {
+      cursor: pointer;
+      background-color: #0055ff;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      padding: 0.5rem 1.25rem;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 4px 8px rgb(0 85 255 / 0.3);
+      user-select: none;
     }
-    const price = parseFloat(stockPrices[selectedStock]);
-    if (!price) {
-      setMessage('Invalid stock price.');
-      return;
+    button:disabled {
+      background-color: #444;
+      cursor: not-allowed;
+      box-shadow: none;
+      opacity: 0.6;
     }
-    if (stockTradeType === 'buy') {
-      // Calculate cost
-      const cost = price * amount;
-      if (cost > balances[selectedCrypto]) {
-        setMessage(`Insufficient ${selectedCrypto} balance to buy ${amount} shares.`);
-        return;
+    button:hover:not(:disabled) {
+      background-color: #0070ff;
+      box-shadow: 0 6px 12px rgb(0 120 255 / 0.5);
+    }
+
+    /* Inputs and selects */
+    input[type="number"], select {
+      font-size: 1rem;
+      padding: 0.45rem 0.8rem;
+      border-radius: 6px;
+      border: none;
+      outline-offset: 2px;
+      outline-color: #0055ff;
+      background-color: #111;
+      color: #eee;
+      width: 100%;
+      max-width: 150px;
+      user-select: text;
+      transition: background-color 0.3s ease;
+    }
+    input[type="number"]:focus, select:focus {
+      background-color: #222;
+    }
+
+    /* Balances display */
+    .balances {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+    .balance {
+      background-color: #1a1a1a;
+      padding: 1rem 1.25rem;
+      border-radius: 8px;
+      flex: 1 1 120px;
+      text-align: center;
+      box-shadow: inset 0 0 10px #00339944;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+    .balance.selected {
+      background-color: #0033cc;
+      box-shadow: 0 0 12px #0055ffaa;
+      color: white;
+      font-weight: 700;
+    }
+
+    /* Section containers */
+    section {
+      background-color: #1a1a1a;
+      border-radius: 10px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 0 10px #000000cc;
+      user-select: none;
+    }
+
+    /* Scrollable lists */
+    .scrollable-list {
+      max-height: 200px;
+      overflow-y: auto;
+      margin-top: 0.75rem;
+      border-top: 1px solid #333;
+      padding-top: 0.5rem;
+    }
+    .list-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid #333;
+      color: #bbb;
+      font-size: 0.9rem;
+    }
+    .list-item:last-child {
+      border-bottom: none;
+    }
+
+    /* Game results & messages */
+    .message {
+      margin-top: 1rem;
+      font-weight: 600;
+      min-height: 1.4em;
+      color: #ffcc00;
+      text-align: center;
+      user-select: text;
+      font-size: 1.1rem;
+    }
+
+    /* Dice, coin, slot big icons */
+    .dice-roll, .coin-flip, .slot-spin {
+      font-size: 4rem;
+      margin: 1rem auto;
+      text-align: center;
+      height: 4.5rem;
+      user-select: none;
+      letter-spacing: 0.15em;
+      filter: drop-shadow(0 0 2px #0055ff88);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 700px) {
+      main {
+        margin: 1rem 1rem 2rem;
+        padding: 1rem;
       }
-      // Deduct balance & add shares
-      updateBalance(selectedCrypto, balances[selectedCrypto] - cost);
-      setPortfolio(p => {
-        const newP = { ...p };
-        newP[selectedStock] = (newP[selectedStock] || 0) + amount;
-        return newP;
-      });
-      setMessage(`Bought ${amount} shares of ${selectedStock} for $${cost.toFixed(2)} ${selectedCrypto}.`);
-      playSound('win');
-    } else {
-      // Sell
-      if ((portfolio[selectedStock] || 0) < amount) {
-        setMessage(`You don't have enough shares of ${selectedStock} to sell.`);
-        return;
+      .flex-row {
+        flex-direction: column;
+        align-items: stretch;
       }
-      const revenue = price * amount;
-      // Add balance & remove shares
-      updateBalance(selectedCrypto, balances[selectedCrypto] + revenue);
-      setPortfolio(p => {
-        const newP = { ...p };
-        newP[selectedStock] = (newP[selectedStock] || 0) - amount;
-        if (newP[selectedStock] <= 0) delete newP
-
-
-
-
-
-
-
-
-
+      input[type="number"], select {
+        max-width: 100%;
+      }
+      button {
+        width: 100%;
+      }
+      .balances {
+        flex-direction

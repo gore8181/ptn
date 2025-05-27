@@ -1,20 +1,54 @@
-<!-- Inside body, replace #controls div -->
-<div id="controls">
-  <div class="input-group">
-    <label for="bet">Bet Amount ($)</label>
-    <input type="number" id="bet" min="1" value="10" />
-  </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AntiExtort</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <img src="assets/logo.svg" alt="AntiExtort Logo" class="logo" />
+      <nav>
+        <a href="#">Home</a>
+        <a href="#">Guide</a>
+        <a href="#">Help</a>
+        <a href="#">Contribute</a>
+      </nav>
+    </div>
+  </header>
 
-  <div class="input-group">
-    <label for="minesCount">Mines</label>
-    <select id="minesCount" aria-label="Mines count">
-      <option value="3">3 (Easy)</option>
-      <option value="5" selected>5 (Medium)</option>
-      <option value="7">7 (Hard)</option>
-      <option value="10">10 (Extreme)</option>
-    </select>
-  </div>
+  <section class="hero">
+    <div class="container">
+      <h1>Protect Yourself From Sextortion</h1>
+      <p>Learn how to spot, report, and fight back against digital extortion.</p>
+      <a href="#" class="cta-button">Get Help Now</a>
+    </div>
+  </section>
 
-  <button id="startBtn">Start Game</button>
-  <button id="cashoutBtn" disabled>Cash Out</button>
-</div>
+  <section class="features">
+    <div class="container">
+      <div class="feature">
+        <h2>Recognize the Signs</h2>
+        <p>Understand how sextortion scams work and how to identify red flags.</p>
+      </div>
+      <div class="feature">
+        <h2>Report Safely</h2>
+        <p>Find anonymous reporting tools and resources tailored to your location.</p>
+      </div>
+      <div class="feature">
+        <h2>Take Action</h2>
+        <p>Learn how to protect your identity and reduce emotional harm.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 AntiExtort. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

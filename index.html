@@ -3,52 +3,153 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Stake Clone - Frontend Only</title>
-<link rel="stylesheet" href="style.css" />
+<title>Stake Clone - Register & Wallet Demo</title>
+<style>
+  body {
+    background-color: #121212;
+    color: #eee;
+    font-family: Arial, sans-serif;
+    margin: 0; padding: 20px;
+  }
+  input, button {
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 4px;
+    border: none;
+  }
+  button {
+    cursor: pointer;
+    background-color: #00bfa5;
+    color: black;
+    font-weight: bold;
+  }
+  #register-section, #game-section {
+    max-width: 400px;
+    margin: 0 auto;
+    background: #222;
+    padding: 20px;
+    border-radius: 10px;
+  }
+  #game-section p {
+    font-size: 1.2em;
+  }
+  .error-msg {
+    color: #f44336;
+  }
+</style>
 </head>
 <body>
-<div id="app">
 
-  <!-- LOGIN/REGISTER MODAL -->
-  <div id="auth-modal" class="modal">
-    <div class="modal-content">
-      <h2 id="auth-title">Login</h2>
-      <form id="auth-form">
-        <input type="text" id="username" placeholder="Username" required />
-        <input type="password" id="password" placeholder="Password" required />
-        <button type="submit" id="auth-submit">Login</button>
-      </form>
-      <p id="auth-switch">
-        Don't have an account? <a href="#" id="switch-to-register">Register</a>
-      </p>
-      <p id="auth-error" class="error-msg"></p>
-    </div>
-  </div>
-
-  <!-- MAIN LAYOUT -->
-  <header>
-    <div class="logo">StakeClone</div>
-    <nav>
-      <button class="nav-btn" data-page="dice">Dice</button>
-      <button class="nav-btn" data-page="plinko">Plinko</button>
-      <button class="nav-btn" data-page="crash">Crash</button>
-      <button class="nav-btn" data-page="mines">Mines</button>
-      <button class="nav-btn" data-page="wallet">Wallet</button>
-      <button class="nav-btn" data-page="leaderboard">Leaderboard</button>
-      <button class="nav-btn" data-page="history">History</button>
-      <button id="logout-btn">Logout</button>
-    </nav>
-  </header>
-
-  <main id="main-content">
-    <!-- Pages will be dynamically loaded here -->
-  </main>
-
-  <footer>
-    <p>StakeClone © 2025. This is a fake frontend-only demo.</p>
-  </footer>
+<div id="register-section">
+  <h2>Register</h2>
+  <form id="register-form">
+    <input type="text" id="reg-username" placeholder="Username" required />
+    <input type="password" id="reg-password" placeholder="Password" required />
+    <button type="submit">Register</button>
+  </form>
+  <p id="reg-error" class="error-msg"></p>
 </div>
 
-<script src="app.js"></script>
+<div id="game-section" style="display:none;">
+  <h2>Welcome, <span id="user-display"></span>!</h2>
+  <p>BTC Balance: <span id="btc-balance">0.00000</span></p>
+  <p>ETH Balance: <span id="eth-balance">0.00000</span></p>
+  <p>USDT Balance: <span id="usdt-balance">0.00</span></p>
+
+  <button id="logout-btn">Logout</button>
+
+  <hr />
+
+  <h3>Dummy Game Area</h3>
+  <p>Games will be here soon!</p>
+</div>
+
+<script>
+  // Load users or init empty object
+  let users = JSON.parse(localStorage.getItem("stakeclone_users")) || {};
+
+  // Register form handler
+  document.getElementById("register-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const username = document.getElementById("reg-username").value.trim();
+    const password = document.getElementById("reg-password").value;
+
+    if (!username || !password) {
+      showError("Please enter username and password.");
+      return;
+    }
+
+    if (users[username]) {
+      showError("Username already taken.");
+      return;
+    }
+
+    // Save new user with starting balances
+    users[username] = {
+      password: password,
+      wallet: {
+        BTC: 0.05,
+        ETH: 0.5,
+        USDT: 100,
+      },
+      bettingHistory: [],
+    };
+
+    localStorage.setItem("stakeclone_users", JSON.stringify(users));
+
+    // Save session (auto-login)
+    sessionStorage.setItem("stakeclone_session", username);
+
+    // Clear error & form
+    showError("");
+    document.getElementById("register-form").reset();
+
+    alert(`Registered successfully! Logged in as ${username}.`);
+
+    initAfterLogin();
+  });
+
+  function showError(msg) {
+    document.getElementById("reg-error").textContent = msg;
+  }
+
+  function updateBalanceDisplay(wallet) {
+    document.getElementById("btc-balance").textContent = wallet.BTC.toFixed(5);
+    document.getElementById("eth-balance").textContent = wallet.ETH.toFixed(5);
+    document.getElementById("usdt-balance").textContent = wallet.USDT.toFixed(2);
+  }
+
+  function initAfterLogin() {
+    const currentUser = sessionStorage.getItem("stakeclone_session");
+    if (!currentUser) return;
+
+    // Hide register, show game section
+    document.getElementById("register-section").style.display = "none";
+    document.getElementById("game-section").style.display = "block";
+
+    // Show username
+    document.getElementById("user-display").textContent = currentUser;
+
+    // Load user wallet
+    const wallet = users[currentUser].wallet;
+    updateBalanceDisplay(wallet);
+  }
+
+  // Logout clears session and shows register again
+  document.getElementById("logout-btn").addEventListener("click", () => {
+    sessionStorage.removeItem("stakeclone_session");
+    document.getElementById("game-section").style.display = "none";
+    document.getElementById("register-section").style.display = "block";
+  });
+
+  // On page load, auto login if session exists
+  window.onload = () => {
+    if (sessionStorage.getItem("stakeclone_session")) {
+      initAfterLogin();
+    }
+  };
+</script>
+
 </body>
 </html>

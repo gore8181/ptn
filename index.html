@@ -14,31 +14,106 @@
       margin: 0;
       height: 100vh;
       overflow: hidden;
-      color: #bbb;
     }
-    a { color: #bbb; transition: color 0.3s ease; }
-    a:hover { color: #fff; }
-    h1 a { font-size: 2.5rem; text-decoration: underline; }
-    .names { font-size: 1.2rem; margin: 15px 0; }
-    .channel-announcement { font-size: 1rem; margin: 30px 0 10px; }
-    .channel-link a { font-size: 1.3rem; font-weight: bold; text-decoration: none; }
-    img { max-width: 150px; margin-bottom: 20px; }
-    /* Overlay */
+
+    a {
+      color: #bbb;
+      transition: color 0.3s ease;
+    }
+
+    a:hover {
+      color: #fff;
+    }
+
+    h1 a {
+      font-size: 2.5rem;
+      text-decoration: underline;
+    }
+
+    .names {
+      font-size: 1.2rem;
+      color: #bbb;
+      margin: 15px 0;
+    }
+
+    .channel-announcement {
+      font-size: 1rem;
+      color: #bbb;
+      margin: 30px 0 10px;
+    }
+
+    .channel-link a {
+      font-size: 1.3rem;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 150px;
+      margin-bottom: 20px;
+    }
+
+    /* Overlay styles */
     #overlay {
-      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.85);
-      display: flex; justify-content: center; align-items: center;
-      z-index: 1000; cursor: pointer; backdrop-filter: blur(8px);
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
       transition: opacity 0.6s ease, transform 0.6s ease;
     }
+
     #overlay.hidden {
-      opacity: 0; transform: scale(1.05); pointer-events: none;
+      opacity: 0;
+      transform: scale(1.05);
+      pointer-events: none;
     }
+
     #overlay .enter-text {
-      color: #fff; font-size: 1.2rem; text-shadow: 0 0 6px #fff;
+      color: #fff;
+      font-size: 1.2rem;
+      font-family: 'UnifrakturMaguntia', cursive;
+      text-shadow: 0 0 6px #fff;
+      user-select: none;
     }
+
+    /* Blur main content when overlay is active */
     body.blur #content {
-      filter: blur(8px); pointer-events: none; user-select: none;
+      filter: blur(8px);
+      pointer-events: none;
+      user-select: none;
       transition: filter 0.5s ease;
     }
- 
+  </style>
+</head>
+<body class="blur">
+  <div id="overlay" title="Click to Enter">
+    <div class="enter-text">Click to Enter</div>
+  </div>
+
+  <div id="content">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Twin_fairies_silhouette.png/200px-Twin_fairies_silhouette.png" alt="Fairy Twins" />
+    <h1><a href="https://example.com">antiextort</a></h1>
+    <div class="names">Emact, Krone, Tobagoa, Rifle, Month, Atlas, 561, V, Romance, Neptunian, Kami</div>
+    <div class="channel-announcement">Our Old Channel Got Termed, So Join Our New One!</div>
+    <div class="channel-link"><a href="https://example.com/channel">Our New Channel</a></div>
+  </div>
+
+  <script>
+    const overlay = document.getElementById('overlay');
+    const body = document.body;
+
+    overlay.addEventListener('click', () => {
+      overlay.classList.add('hidden');
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        body.classList.remove('blur');
+      }, 600);
+    });
+  </script>
+</body>
+</html>

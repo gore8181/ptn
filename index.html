@@ -5,90 +5,216 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mines Gambling Game</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
+
+    /* Reset & base */
+    * {
+      box-sizing: border-box;
+    }
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
       background: #121212;
       color: #eee;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px;
+      padding: 2rem 1rem;
+      min-height: 100vh;
+      user-select: none;
     }
     h1 {
-      margin-bottom: 10px;
-    }
-    #game {
-      display: grid;
-      grid-template-columns: repeat(5, 60px);
-      grid-gap: 10px;
-      margin: 20px 0;
-    }
-    .tile {
-      width: 60px;
-      height: 60px;
-      background: #222;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      cursor: pointer;
-      user-select: none;
-      transition: background 0.3s;
-    }
-    .tile.safe {
-      background: #1a7f1a;
-      cursor: default;
-    }
-    .tile.mine {
-      background: #a71d1d;
-      cursor: default;
-    }
-    button, input, select {
-      font-size: 16px;
-      padding: 8px 12px;
-      border-radius: 6px;
-      border: none;
-      margin: 5px;
-    }
-    button {
-      cursor: pointer;
-      background: #3a86ff;
-      color: white;
-      transition: background 0.3s;
-    }
-    button:hover:not(:disabled) {
-      background: #255fcc;
-    }
-    input[type="number"] {
-      width: 100px;
-    }
-    #status {
-      margin-top: 10px;
-      font-size: 18px;
-      min-height: 24px;
+      font-weight: 600;
+      font-size: 2.5rem;
+      margin-bottom: 0.2rem;
+      letter-spacing: 0.05em;
     }
     #controls {
-      margin-bottom: 10px;
+      margin: 1.5rem 0 2rem;
       display: flex;
-      align-items: center;
-      gap: 10px;
+      gap: 1.5rem;
       flex-wrap: wrap;
       justify-content: center;
+    }
+    label {
+      font-weight: 600;
+      font-size: 1rem;
+      display: flex;
+      flex-direction: column;
+      color: #ccc;
+    }
+    input[type="number"],
+    select {
+      margin-top: 0.4rem;
+      padding: 0.5rem 0.8rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: none;
+      background: #222;
+      color: #eee;
+      transition: background-color 0.3s ease;
+      width: 120px;
+      text-align: center;
+    }
+    input[type="number"]:focus,
+    select:focus {
+      outline: 2px solid #3a86ff;
+      background: #2a2a2a;
+    }
+    button {
+      background: #3a86ff;
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-weight: 600;
+      font-size: 1.1rem;
+      padding: 0.6rem 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(58, 134, 255, 0.4);
+      transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease;
+      min-width: 130px;
+      user-select: none;
+    }
+    button:disabled {
+      background: #555;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+    button:not(:disabled):hover {
+      background: #2f6fd3;
+      box-shadow: 0 8px 20px rgba(47, 111, 211, 0.7);
+      transform: translateY(-3px);
+    }
+    button:not(:disabled):active {
+      transform: translateY(0);
+      box-shadow: 0 3px 10px rgba(47, 111, 211, 0.5);
+    }
+
+    /* Game Grid */
+    #game {
+      display: grid;
+      grid-template-columns: repeat(5, 70px);
+      grid-gap: 14px;
+      justify-content: center;
+      margin-bottom: 2rem;
+      perspective: 800px; /* for flip effect */
+    }
+
+    .tile {
+      width: 70px;
+      height: 70px;
+      background: #222;
+      border-radius: 12px;
+      box-shadow:
+        inset 0 3px 5px rgba(255,255,255,0.1),
+        0 5px 15px rgba(0,0,0,0.7);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      color: transparent;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .tile.revealed {
+      cursor: default;
+      color: #fff;
+      transform: rotateY(180deg);
+    }
+    .tile .front,
+    .tile .back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+      backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .tile .front {
+      background: #222;
+      box-shadow:
+        inset 0 3px 5px rgba(255,255,255,0.1),
+        0 5px 15px rgba(0,0,0,0.7);
+      color: transparent;
+      font-size: 28px;
+      user-select: none;
+    }
+    .tile .back {
+      transform: rotateY(180deg);
+      font-size: 30px;
+      font-weight: 700;
+    }
+    .tile.safe .back {
+      background: #1e7e1e;
+      box-shadow: 0 0 10px #28c128;
+      color: #d4f7d4;
+    }
+    .tile.mine .back {
+      background: #a71d1d;
+      box-shadow: 0 0 12px #ff4b4b;
+      color: #ffdada;
+    }
+    .tile:hover:not(.revealed) {
+      background: #333;
+      box-shadow:
+        inset 0 4px 8px rgba(255,255,255,0.15),
+        0 8px 18px rgba(0,0,0,0.85);
+      transform: scale(1.05);
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    /* Status */
+    #status {
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: #aaa;
+      min-height: 30px;
+      max-width: 400px;
+      text-align: center;
+      user-select: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 400px) {
+      #game {
+        grid-template-columns: repeat(5, 50px);
+        grid-gap: 10px;
+      }
+      .tile {
+        width: 50px;
+        height: 50px;
+        font-size: 22px;
+      }
+      .tile .back {
+        font-size: 22px;
+      }
+      input[type="number"], select {
+        width: 90px;
+      }
+      button {
+        min-width: 100px;
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Mines Gambling Game</h1>
+  <h1>Mines Gambling</h1>
 
   <div id="controls">
     <label>
-      Bet Amount ($):
+      Bet Amount ($)
       <input type="number" id="bet" min="1" value="10" />
     </label>
 
     <label>
-      Mines:
+      Mines
       <select id="minesCount">
         <option value="3">3 (Easy)</option>
         <option value="5" selected>5 (Medium)</option>
@@ -103,7 +229,7 @@
 
   <div id="game"></div>
 
-  <div id="status"></div>
+  <div id="status">Place your bet and start playing!</div>
 
   <script>
     const gameContainer = document.getElementById('game');
@@ -114,7 +240,7 @@
     const status = document.getElementById('status');
 
     const gridSize = 25; // 5x5 grid
-    let mines = [];
+    let mines = new Set();
     let revealed = new Set();
     let bet = 0;
     let multiplier = 1;
@@ -140,12 +266,23 @@
       // Generate mines
       mines = generateMines(minesCount);
 
-      // Build grid
+      // Build grid with front/back structure for flip animation
       gameContainer.innerHTML = '';
       for (let i = 0; i < gridSize; i++) {
         const tile = document.createElement('div');
         tile.classList.add('tile');
         tile.dataset.index = i;
+
+        const front = document.createElement('div');
+        front.classList.add('front');
+        front.textContent = '❓';
+
+        const back = document.createElement('div');
+        back.classList.add('back');
+
+        tile.appendChild(front);
+        tile.appendChild(back);
+
         tile.addEventListener('click', () => onTileClick(i));
         gameContainer.appendChild(tile);
       }
@@ -164,18 +301,23 @@
       if (revealed.has(index)) return;
 
       const tile = gameContainer.children[index];
+      const back = tile.querySelector('.back');
+      const front = tile.querySelector('.front');
 
       if (mines.has(index)) {
         // Hit mine - lose
-        tile.classList.add('mine');
-        tile.textContent = '💣';
+        tile.classList.add('mine', 'revealed');
+        back.textContent = '💣';
+        front.textContent = '';
         endGame(false);
       } else {
         // Safe tile
-        tile.classList.add('safe');
-        tile.textContent = '✔️';
+        tile.classList.add('safe', 'revealed');
+        back.textContent = '✔️';
+        front.textContent = '';
         revealed.add(index);
-        // Increase multiplier for each safe tile (simple multiplier example)
+
+        // Increase multiplier for each safe tile (simple example)
         multiplier = 1 + revealed.size * 0.3;
         status.textContent = `Safe! Current multiplier: x${multiplier.toFixed(2)}. Click more or cash out.`;
       }
@@ -190,17 +332,20 @@
 
       if (won) {
         const winnings = bet * multiplier;
-        status.textContent = `You cashed out! You won $${winnings.toFixed(2)}.`;
+        status.textContent = `🎉 You cashed out! You won $${winnings.toFixed(2)}.`;
       } else {
         // Reveal all mines
         mines.forEach((mineIdx) => {
           const mineTile = gameContainer.children[mineIdx];
           if (!mineTile.classList.contains('mine')) {
-            mineTile.classList.add('mine');
-            mineTile.textContent = '💣';
+            mineTile.classList.add('mine', 'revealed');
+            const back = mineTile.querySelector('.back');
+            const front = mineTile.querySelector('.front');
+            back.textContent = '💣';
+            front.textContent = '';
           }
         });
-        status.textContent = `Boom! You hit a mine. You lost your bet of $${bet.toFixed(2)}. Try again!`;
+        status.textContent = `💥 Boom! You hit a mine and lost $${bet.toFixed(2)}. Try again!`;
       }
     }
 
@@ -213,3 +358,4 @@
   </script>
 </body>
 </html>
+

@@ -1,485 +1,285 @@
-import React, { useState, useEffect, useRef } from "react";
-
-const CRYPTOS = ["BTC", "SOL", "LTC", "ETH"];
-const INITIAL_BALANCE = 100;
-const STOCKS = [
-  { symbol: "ACME", name: "Acme Corp", basePrice: 50 },
-  { symbol: "GME", name: "GameMart", basePrice: 120 },
-  { symbol: "FLUX", name: "Flux Industries", basePrice: 30 },
-  { symbol: "ZEN", name: "Zenith Ltd.", basePrice: 75 },
-];
-
-// Helper sound function (simple beep)
-const playSound = (type) => {
-  try {
-    const ctx = new AudioContext();
-    const oscillator = ctx.createOscillator();
-    oscillator.type = type === "win" ? "triangle" : "sine";
-    oscillator.frequency.setValueAtTime(type === "win" ? 880 : 440, ctx.currentTime);
-    oscillator.connect(ctx.destination);
-    oscillator.start();
-    oscillator.stop(ctx.currentTime + 0.15);
-  } catch (e) {
-    // Audio not supported or blocked, fail silently
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Crypto Gambling Platform Demo</title>
+<style>
+  body {
+    background: #121212;
+    color: #eee;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0; padding: 20px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
   }
-};
-
-export default function CryptoGamble() {
-  // --- Balances stored in localStorage ---
-  const [balances, setBalances] = useState(() => {
-    const saved = localStorage.getItem("balances");
-    if (saved) return JSON.parse(saved);
-    let init = {};
-    CRYPTOS.forEach((c) => (init[c] = INITIAL_BALANCE));
-    return init;
-  });
-
-  const [selectedCrypto, setSelectedCrypto] = useState(CRYPTOS[0]);
-  const [gameMessage, setGameMessage] = useState("");
-  const [betAmount, setBetAmount] = useState(1);
-
-  // --- Stock Market state ---
-  const [stockPrices, setStockPrices] = useState(() =>
-    STOCKS.reduce((acc, s) => {
-      acc[s.symbol] = s.basePrice;
-      return acc;
-    }, {})
-  );
-  const [portfolio, setPortfolio] = useState(() => {
-    const saved = localStorage.getItem("portfolio");
-    return saved ? JSON.parse(saved) : {};
-  });
-
-  // --- Leaderboard (top portfolio value or winnings) ---
-  const [leaderboard, setLeaderboard] = useState(() => {
-    const saved = localStorage.getItem("leaderboard");
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  // --- Game states ---
-  const [diceRoll, setDiceRoll] = useState(null);
-  const [coinFlip, setCoinFlip] = useState(null); // "heads" or "tails"
-  const [slotResult, setSlotResult] = useState(null);
-  const [slotSpinning, setSlotSpinning] = useState(false);
-
-  // --- Portfolio total value ---
-  const portfolioValue = Object.entries(portfolio).reduce((total, [symbol, qty]) => {
-    const price = stockPrices[symbol] || 0;
-    return total + qty * price;
-  }, 0);
-
-  // --- Save balances and portfolio on changes ---
-  useEffect(() => {
-    localStorage.setItem("balances", JSON.stringify(balances));
-  }, [balances]);
-
-  useEffect(() => {
-    localStorage.setItem("portfolio", JSON.stringify(portfolio));
-  }, [portfolio]);
-
-  useEffect(() => {
-    localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
-  }, [leaderboard]);
-
-  // --- Stock price updates every 3 seconds ---
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setStockPrices((oldPrices) => {
-        const newPrices = { ...oldPrices };
-        STOCKS.forEach(({ symbol, basePrice }) => {
-          const changePercent = (Math.random() - 0.5) * 0.1; // -5% to +5%
-          let newPrice = newPrices[symbol] * (1 + changePercent);
-          // Bound prices between 50% and 150% of base
-          newPrice = Math.max(basePrice * 0.5, Math.min(basePrice * 1.5, newPrice));
-          newPrices[symbol] = +newPrice.toFixed(2);
-        });
-        return newPrices;
-      });
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // --- Utility: update balance for selected crypto ---
-  function updateBalance(amount) {
-    setBalances((bals) => {
-      let newBal = Math.min(100, Math.max(0, bals[selectedCrypto] + amount));
-      return { ...bals, [selectedCrypto]: +newBal.toFixed(2) };
-    });
+  h1, h2 {
+    text-align: center;
   }
-
-  // --- Betting helper: check bet amount validity ---
-  function validBet(amount) {
-    return amount > 0 && amount <= balances[selectedCrypto];
+  select, input[type=number], button {
+    font-size: 1rem;
+    padding: 6px 10px;
+    margin: 4px;
+    border-radius: 4px;
+    border: none;
   }
-
-  // --- Game: Dice ---
-  function playDice() {
-    if (!validBet(betAmount)) {
-      setGameMessage("Invalid bet amount!");
-      return;
+  button {
+    cursor: pointer;
+    background: #0f7;
+    color: #000;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  button:hover:not(:disabled) {
+    background: #0a5;
+  }
+  button:disabled {
+    background: #444;
+    cursor: default;
+  }
+  .balances, .games-container, .stock-market, .leaderboard {
+    background: #222;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 20px;
+  }
+  .balances > div, .games-container > div {
+    margin-bottom: 15px;
+  }
+  .games-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
+  .game-box {
+    background: #333;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px;
+    width: 280px;
+    box-sizing: border-box;
+    text-align: center;
+  }
+  .game-box button {
+    margin-top: 10px;
+    width: 100%;
+  }
+  .message {
+    min-height: 30px;
+    background: #111;
+    color: #0f0;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 6px;
+    margin-top: 15px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  th, td {
+    border-bottom: 1px solid #555;
+    padding: 6px 8px;
+    text-align: center;
+  }
+  th {
+    background: #333;
+  }
+  .slot-reels {
+    font-size: 3rem;
+    min-height: 60px;
+    user-select: none;
+  }
+  /* Animations */
+  @keyframes diceRoll {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(360deg) scale(1.2); }
+    100% { transform: rotate(720deg) scale(1); }
+  }
+  .rolling {
+    animation: diceRoll 1s ease-in-out;
+  }
+  .coin-flip {
+    animation: coinFlipAnim 1s ease forwards;
+  }
+  @keyframes coinFlipAnim {
+    0% { transform: rotateY(0deg); }
+    100% { transform: rotateY(720deg); }
+  }
+  @keyframes slotSpin {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-100%); }
+  }
+  @media (max-width: 700px) {
+    .games-container {
+      flex-direction: column;
+      align-items: center;
     }
-    setGameMessage("");
-    const roll = Math.floor(Math.random() * 6) + 1; // 1 to 6
-    setDiceRoll(roll);
-    updateBalance(-betAmount);
-    // Win if roll > 3 (4,5,6)
-    if (roll > 3) {
-      const winAmount = betAmount * 2;
-      updateBalance(winAmount);
-      setGameMessage(`You rolled a ${roll} and won ${winAmount.toFixed(2)} ${selectedCrypto}!`);
-      playSound("win");
-      updateLeaderboard(winAmount);
-    } else {
-      setGameMessage(`You rolled a ${roll}. You lost ${betAmount.toFixed(2)} ${selectedCrypto}.`);
-      playSound("lose");
+    .game-box {
+      width: 90%;
     }
   }
+</style>
+</head>
+<body>
 
-  // --- Game: Coin Flip ---
-  const [coinBet, setCoinBet] = useState("heads");
-  function playCoinFlip() {
-    if (!validBet(betAmount)) {
-      setGameMessage("Invalid bet amount!");
-      return;
-    }
-    setGameMessage("");
-    const flip = Math.random() < 0.5 ? "heads" : "tails";
-    setCoinFlip(flip);
-    updateBalance(-betAmount);
-    if (flip === coinBet) {
-      const winAmount = betAmount * 2;
-      updateBalance(winAmount);
-      setGameMessage(`It was ${flip}. You won ${winAmount.toFixed(2)} ${selectedCrypto}!`);
-      playSound("win");
-      updateLeaderboard(winAmount);
-    } else {
-      setGameMessage(`It was ${flip}. You lost ${betAmount.toFixed(2)} ${selectedCrypto}.`);
-      playSound("lose");
-    }
-  }
+<h1>Crypto Gambling Platform Demo</h1>
 
-  // --- Game: Slot Machine ---
+<div class="balances">
+  <div>
+    <label for="cryptoSelect">Select Crypto: </label>
+    <select id="cryptoSelect"></select>
+  </div>
+  <div>
+    <strong>Balance:</strong> <span id="balanceDisplay">0.00</span>
+  </div>
+  <div>
+    <button id="withdrawBtn">Withdraw</button>
+  </div>
+</div>
+
+<div>
+  <label for="betAmount">Bet Amount (<span id="selectedCryptoSymbol"></span>): </label>
+  <input type="number" id="betAmount" min="1" value="1" />
+</div>
+
+<div class="games-container">
+  <div class="game-box" id="diceGame">
+    <h2>Dice Game</h2>
+    <div id="diceRollDisplay" style="font-size: 2rem; margin: 10px 0;">🎲</div>
+    <button id="diceRollBtn">Roll Dice</button>
+  </div>
+
+  <div class="game-box" id="coinGame">
+    <h2>Coin Flip</h2>
+    <label><input type="radio" name="coinBet" value="heads" checked /> Heads</label>
+    <label><input type="radio" name="coinBet" value="tails" /> Tails</label>
+    <div id="coinResult" style="font-size: 2rem; margin: 10px 0;">🪙</div>
+    <button id="coinFlipBtn">Flip Coin</button>
+  </div>
+
+  <div class="game-box" id="slotGame">
+    <h2>Slot Machine</h2>
+    <div class="slot-reels" id="slotReels">🎰 🎰 🎰</div>
+    <button id="slotSpinBtn">Spin Slots</button>
+  </div>
+</div>
+
+<div class="message" id="gameMessage"></div>
+
+<div class="stock-market">
+  <h2>Stock Market Simulation</h2>
+  <table id="stockTable" aria-label="Stock market table">
+    <thead>
+      <tr>
+        <th>Symbol</th>
+        <th>Name</th>
+        <th>Price (<span id="stockCryptoSymbol"></span>)</th>
+        <th>Actions</th>
+        <th>Your Shares</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <div style="margin-top: 10px;">
+    <strong>Portfolio Value:</strong> <span id="portfolioValue">0.00</span> <span id="portfolioCryptoSymbol"></span>
+  </div>
+</div>
+
+<div class="leaderboard">
+  <h2>Leaderboard (Top Wins)</h2>
+  <table id="leaderboardTable" aria-label="Leaderboard table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Crypto</th>
+        <th>Amount Won</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<footer style="text-align: center; margin-top: 40px; color: #666;">
+  <small>Demo platform — no real crypto involved.</small>
+</footer>
+
+<script>
+(() => {
+  const CRYPTOS = ["BTC", "SOL", "LTC", "ETH"];
+  const INITIAL_BALANCE = 100;
+  const STOCKS = [
+    { symbol: "ACME", name: "Acme Corp", basePrice: 50 },
+    { symbol: "GME", name: "GameMart", basePrice: 120 },
+    { symbol: "FLUX", name: "Flux Industries", basePrice: 30 },
+    { symbol: "ZEN", name: "Zenith Ltd.", basePrice: 75 },
+  ];
   const slotSymbols = ["🍒", "🍋", "🔔"];
-  function playSlot() {
-    if (slotSpinning) return; // Prevent spam
-    if (!validBet(betAmount)) {
-      setGameMessage("Invalid bet amount!");
-      return;
+  const MAX_BALANCE = 100;
+
+  // Elements
+  const cryptoSelect = document.getElementById("cryptoSelect");
+  const balanceDisplay = document.getElementById("balanceDisplay");
+  const selectedCryptoSymbol = document.getElementById("selectedCryptoSymbol");
+  const betAmountInput = document.getElementById("betAmount");
+  const withdrawBtn = document.getElementById("withdrawBtn");
+  const gameMessage = document.getElementById("gameMessage");
+
+  // Dice
+  const diceRollDisplay = document.getElementById("diceRollDisplay");
+  const diceRollBtn = document.getElementById("diceRollBtn");
+
+  // Coin Flip
+  const coinFlipBtn = document.getElementById("coinFlipBtn");
+  const coinResult = document.getElementById("coinResult");
+
+  // Slot Machine
+  const slotReels = document.getElementById("slotReels");
+  const slotSpinBtn = document.getElementById("slotSpinBtn");
+
+  // Stock Market
+  const stockTableBody = document.querySelector("#stockTable tbody");
+  const portfolioValueDisplay = document.getElementById("portfolioValue");
+  const stockCryptoSymbol = document.getElementById("stockCryptoSymbol");
+  const portfolioCryptoSymbol = document.getElementById("portfolioCryptoSymbol");
+
+  // Leaderboard
+  const leaderboardTableBody = document.querySelector("#leaderboardTable tbody");
+
+  // State
+  let balances = {};
+  let selectedCrypto = CRYPTOS[0];
+  let portfolio = {};
+  let leaderboard = [];
+  let stockPrices = {};
+  let diceRolling = false;
+  let slotSpinning = false;
+
+  // Initialize balances from localStorage or set initial
+  function loadBalances() {
+    const saved = localStorage.getItem("balances");
+    if (saved) {
+      balances = JSON.parse(saved);
+      // Ensure all cryptos exist
+      CRYPTOS.forEach(c => {
+        if (!(c in balances)) balances[c] = INITIAL_BALANCE;
+      });
+    } else {
+      CRYPTOS.forEach(c => balances[c] = INITIAL_BALANCE);
     }
-    setGameMessage("");
-    setSlotSpinning(true);
-    updateBalance(-betAmount);
-
-    // Animate spinning for 1.5 seconds
-    let spins = 0;
-    const maxSpins = 15;
-    const spinInterval = setInterval(() => {
-      spins++;
-      setSlotResult([
-        slotSymbols[Math.floor(Math.random() * slotSymbols.length)],
-        slotSymbols[Math.floor(Math.random() * slotSymbols.length)],
-        slotSymbols[Math.floor(Math.random() * slotSymbols.length)],
-      ]);
-      if (spins >= maxSpins) {
-        clearInterval(spinInterval);
-        // Evaluate result
-        const [s1, s2, s3] = slotResult || ["", "", ""];
-        let winAmount = 0;
-        if (s1 === s2 && s2 === s3) {
-          // Jackpot x5
-          winAmount = betAmount * 5;
-        } else if (s1 === s2 || s2 === s3 || s1 === s3) {
-          // Two match x2
-          winAmount = betAmount * 2;
-        }
-        if (winAmount > 0) {
-          updateBalance(winAmount);
-          setGameMessage(`You won ${winAmount.toFixed(2)} ${selectedCrypto} on slots!`);
-          playSound("win");
-          updateLeaderboard(winAmount);
-        } else {
-          setGameMessage(`No win. You lost ${betAmount.toFixed(2)} ${selectedCrypto}.`);
-          playSound("lose");
-        }
-        setSlotSpinning(false);
-      }
-    }, 100);
   }
+  // Save balances
+  function saveBalances() {
+   
 
-  // --- Withdraw simulation ---
-  function withdraw() {
-    if (balances[selectedCrypto] === 0) {
-      setGameMessage(`No balance to withdraw in ${selectedCrypto}.`);
-      return;
-    }
-    setGameMessage(`Withdrawing ${balances[selectedCrypto].toFixed(2)} ${selectedCrypto}...`);
-    // Simulate delay
-    setTimeout(() => {
-      setBalances((bals) => ({ ...bals, [selectedCrypto]: 0 }));
-      setGameMessage(`Withdrawal successful! Your ${selectedCrypto} balance is now 0.`);
-    }, 1500);
-  }
 
-  // --- Stock Market: buy shares ---
-  function buyShares(symbol) {
-    const price = stockPrices[symbol];
-    const maxBuy = Math.floor(balances[selectedCrypto] / price);
-    if (maxBuy < 1) {
-      setGameMessage("Not enough balance to buy shares.");
-      return;
-    }
-    // Buy one share for simplicity
-    setBalances((bals) => {
-      const cost = price;
-      if (bals[selectedCrypto] < cost) {
-        setGameMessage("Insufficient balance.");
-        return bals;
-      }
-      return { ...bals, [selectedCrypto]: +(bals[selectedCrypto] - cost).toFixed(2) };
-    });
-    setPortfolio((p) => {
-      const oldQty = p[symbol] || 0;
-      return { ...p, [symbol]: oldQty + 1 };
-    });
-    setGameMessage(`Bought 1 share of ${symbol} for ${price.toFixed(2)} ${selectedCrypto}.`);
-    playSound("win");
-  }
 
-  // --- Stock Market: sell shares ---
-  function sellShares(symbol) {
-    const price = stockPrices[symbol];
-    if (!portfolio[symbol] || portfolio[symbol] < 1) {
-      setGameMessage(`No shares of ${symbol} to sell.`);
-      return;
-    }
-    // Sell one share for simplicity
-    setPortfolio((p) => {
-      const newQty = p[symbol] - 1;
-      if (newQty <= 0) {
-        const copy = { ...p };
-        delete copy[symbol];
-        return copy;
-      }
-      return { ...p, [symbol]: newQty };
-    });
-    setBalances((bals) => {
-      return { ...bals, [selectedCrypto]: +(bals[selectedCrypto] + price).toFixed(2) };
-    });
-    setGameMessage(`Sold 1 share of ${symbol} for ${price.toFixed(2)} ${selectedCrypto}.`);
-    playSound("win");
-  }
 
-  // --- Leaderboard update ---
-  function updateLeaderboard(winAmount) {
-    const date = new Date().toISOString();
-    const entry = {
-      crypto: selectedCrypto,
-      amount: winAmount,
-      date,
-    };
-    setLeaderboard((lb) => {
-      const newLb = [...lb, entry]
-        .sort((a, b) => b.amount - a.amount)
-        .slice(0, 10);
-      return newLb;
-    });
-  }
 
-  return (
-    <div style={styles.app}>
-      <h1 style={{ textAlign: "center" }}>Crypto Gambling Platform Demo</h1>
 
-      {/* Crypto selector and balances */}
-      <div style={styles.balances}>
-        <div>
-          <label>
-            Select Crypto:{" "}
-            <select
-              value={selectedCrypto}
-              onChange={(e) => setSelectedCrypto(e.target.value)}
-            >
-              {CRYPTOS.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-        <div style={{ marginTop: 8 }}>
-          <strong>Balance:</strong> {balances[selectedCrypto].toFixed(2)} {selectedCrypto}
-        </div>
-        <div style={{ marginTop: 4 }}>
-          <button onClick={withdraw} style={styles.button}>
-            Withdraw {selectedCrypto}
-          </button>
-        </div>
-      </div>
 
-      {/* Betting amount */}
-      <div style={{ marginTop: 20 }}>
-        <label>
-          Bet Amount ({selectedCrypto}):{" "}
-          <input
-            type="number"
-            min="1"
-            max={balances[selectedCrypto]}
-            value={betAmount}
-            onChange={(e) => setBetAmount(Number(e.target.value))}
-            style={{ width: 60 }}
-          />
-        </label>
-      </div>
 
-      {/* Games */}
-      <div style={styles.gamesContainer}>
-        {/* Dice Game */}
-        <div style={styles.gameBox}>
-          <h2>Dice Game</h2>
-          <button onClick={playDice} style={styles.button}>
-            Roll Dice
-          </button>
-          {diceRoll !== null && <p>Dice Roll: {diceRoll}</p>}
-        </div>
 
-        {/* Coin Flip */}
-        <div style={styles.gameBox}>
-          <h2>Coin Flip</h2>
-          <label>
-            <input
-              type="radio"
-              name="coinBet"
-              value="heads"
-              checked={coinBet === "heads"}
-              onChange={() => setCoinBet("heads")}
-            />
-            Heads
-          </label>{" "}
-          <label>
-            <input
-              type="radio"
-              name="coinBet"
-              value="tails"
-              checked={coinBet === "tails"}
-              onChange={() => setCoinBet("tails")}
-            />
-            Tails
-          </label>
-          <br />
-          <button onClick={playCoinFlip} style={styles.button}>
-            Flip Coin
-          </button>
-          {coinFlip && <p>Result: {coinFlip}</p>}
-        </div>
-
-        {/* Slot Machine */}
-        <div style={styles.gameBox}>
-          <h2>Slot Machine</h2>
-          <div style={{ fontSize: "2rem", minHeight: "2.5rem" }}>
-            {slotResult ? slotResult.join(" ") : "🎰 🎰 🎰"}
-          </div>
-          <button
-            onClick={playSlot}
-            disabled={slotSpinning}
-            style={{ ...styles.button, opacity: slotSpinning ? 0.5 : 1 }}
-          >
-            Spin Slots
-          </button>
-        </div>
-      </div>
-
-      {/* Game result message */}
-      <div
-        style={{
-          marginTop: 20,
-          padding: 10,
-          backgroundColor: "#222",
-          color: "#0f0",
-          minHeight: 30,
-          fontWeight: "bold",
-        }}
-      >
-        {gameMessage}
-      </div>
-
-      {/* Stock Market Section */}
-      <div style={{ marginTop: 40 }}>
-        <h2>Stock Market Simulation</h2>
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
-          <thead>
-            <tr style={{ borderBottom: "1px solid #666" }}>
-              <th>Symbol</th>
-              <th>Name</th>
-              <th>Price ({selectedCrypto})</th>
-              <th>Actions</th>
-              <th>Your Shares</th>
-            </tr>
-          </thead>
-          <tbody>
-            {STOCKS.map(({ symbol, name }) => (
-              <tr key={symbol} style={{ borderBottom: "1px solid #444" }}>
-                <td>{symbol}</td>
-                <td>{name}</td>
-                <td>{stockPrices[symbol].toFixed(2)}</td>
-                <td>
-                  <button
-                    onClick={() => buyShares(symbol)}
-                    style={{ marginRight: 6 }}
-                  >
-                    Buy 1
-                  </button>
-                  <button onClick={() => sellShares(symbol)}>Sell 1</button>
-                </td>
-                <td>{portfolio[symbol] || 0}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        <div style={{ marginTop: 10 }}>
-          <strong>Portfolio Value:</strong> {portfolioValue.toFixed(2)} {selectedCrypto}
-        </div>
-      </div>
-
-      {/* Leaderboard */}
-      <div style={{ marginTop: 40 }}>
-        <h2>Leaderboard (Top Wins)</h2>
-        {leaderboard.length === 0 ? (
-          <p>No wins yet.</p>
-        ) : (
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
-              <tr style={{ borderBottom: "1px solid #666" }}>
-                <th>#</th>
-                <th>Crypto</th>
-                <th>Amount Won</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {leaderboard.map(({ crypto, amount, date }, i) => (
-                <tr key={i} style={{ borderBottom: "1px solid #444" }}>
-                  <td>{i + 1}</td>
-                  <td>{crypto}</td>
-                  <td>{amount.toFixed(2)}</td>
-                  <td>{new Date(date).toLocaleString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
-
-      <footer style={{ marginTop: 50, textAlign: "center", color: "#666" }}>
-        <small>Demo platform — no real crypto involved.</small>
-      </footer>
-    </div>
-  );
-}
-
-const styles = {
-  app: {
-    maxWidth: 900,
-    margin: "auto",
-    padding: 20,
-    fontFamily: "'Segoe UI',

@@ -50,9 +50,11 @@
       text-decoration: none;
     }
 
-    img {
+    #content img:first-child {
       max-width: 150px;
       margin-bottom: 20px;
+      position: relative;
+      z-index: 2;
     }
 
     /* Overlay styles */
@@ -68,8 +70,6 @@
       user-select: none;
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-
-      /* Start visible with full opacity and scale 1 */
       opacity: 1;
       transform: scale(1);
       transition: opacity 0.6s ease, transform 0.6s ease;
@@ -95,6 +95,26 @@
       pointer-events: none;
       user-select: none;
     }
+
+    /* Falling images container */
+    #falling-container {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none; /* So clicks go through */
+      overflow: visible;
+      z-index: 1;
+    }
+
+    .falling-image {
+      position: absolute;
+      will-change: transform;
+      user-select: none;
+      pointer-events: none;
+      opacity: 0.8;
+      animation-timing-function: linear;
+    }
   </style>
 </head>
 <body class="blur">
@@ -102,8 +122,10 @@
     <img src="download (2).png" alt="Click to Enter" />
   </div>
 
+  <div id="falling-container"></div>
+
   <div id="content">
-    <img src="download (2).png" alt="Fairy Twins" />
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Twin_fairies_silhouette.png/200px-Twin_fairies_silhouette.png" alt="Fairy Twins" />
     <h1><a href="https://example.com">antiextort</a></h1>
     <div class="names">Emact, Krone, Tobagoa, Rifle, Month, Atlas, 561, V, Romance, Neptunian, Kami</div>
     <div class="channel-announcement">Our Old Channel Got Termed, So Join Our New One!</div>
@@ -113,16 +135,70 @@
   <script>
     const overlay = document.getElementById('overlay');
     const body = document.body;
+    const container = document.getElementById('falling-container');
+    const imgSrc = "download (2).png";
 
     overlay.addEventListener('click', () => {
-      // Add hidden class to trigger fade and scale animation
       overlay.classList.add('hidden');
-      // Remove blur from content after animation ends
       setTimeout(() => {
         overlay.style.display = 'none';
         body.classList.remove('blur');
-      }, 600); // Match the CSS transition duration
+      }, 600);
     });
+
+    // Create falling images (like snowflakes but with your image)
+    const numberOfFlakes = 25;
+
+    function random(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    for (let i = 0; i < numberOfFlakes; i++) {
+      const flake = document.createElement('img');
+      flake.src = imgSrc;
+      flake.classList.add('falling-image');
+
+      // Random size between 15px and 40px width
+      const size = random(15, 40);
+      flake.style.width = size + 'px';
+
+      // Random horizontal start position
+      flake.style.left = random(0, window.innerWidth) + 'px';
+
+      // Start position just above the top, random delay so they don't fall all at once
+      flake.style.top = -size + 'px';
+
+      // Random animation duration between 6s and 12s
+      const duration = random(6, 12);
+
+      // Create a custom CSS animation using keyframes with slight horizontal oscillation
+      const animationName = `falling${i}`;
+
+      const keyframes = `
+        @keyframes ${animationName} {
+          0% {
+            transform: translateX(0) translateY(0);
+            opacity: 0.8;
+          }
+          50% {
+            transform: translateX(${random(-20, 20)}px) translateY(50vh);
+            opacity: 1;
+          }
+          100% {
+            transform: translateX(0) translateY(100vh);
+            opacity: 0;
+          }
+        }
+      `;
+
+      // Append keyframes to document stylesheet
+      const styleSheet = document.styleSheets[0];
+      styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
+
+      flake.style.animation = `${animationName} ${duration}s linear infinite`;
+
+      container.appendChild(flake);
+    }
   </script>
 </body>
 </html>

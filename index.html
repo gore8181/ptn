@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>antiextort</title>
   <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap" rel="stylesheet" />
   <style>
@@ -73,6 +73,7 @@
       opacity: 1;
       transform: scale(1);
       transition: opacity 0.6s ease, transform 0.6s ease;
+      overflow: hidden;
     }
 
     #overlay.hidden {
@@ -81,11 +82,13 @@
       pointer-events: none;
     }
 
-    #overlay img {
+    #overlay img.main-image {
       max-width: 250px;
       max-height: 250px;
       user-select: none;
       pointer-events: none;
+      position: relative;
+      z-index: 10;
     }
 
     /* Blur effect on body content when overlay is visible */
@@ -96,36 +99,56 @@
       user-select: none;
     }
 
-    /* Falling images container */
-    #falling-container {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none; /* So clicks go through */
+    /* Container for falling flakes inside overlay */
+    #overlay .falling-container {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
       overflow: visible;
-      z-index: 1;
+      z-index: 5;
     }
 
-    .falling-image {
+    /* Single flake styles and animations */
+    .falling-flake {
       position: absolute;
+      background-image: url('download (2).png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      width: 25px;
+      height: 25px;
+      opacity: 0.8;
+      animation-name: fall;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
       will-change: transform;
       user-select: none;
       pointer-events: none;
-      opacity: 0.8;
-      animation-timing-function: linear;
+    }
+
+    /* Animate falling from top to bottom with side sway */
+    @keyframes fall {
+      0% {
+        transform: translateX(0) translateY(-30px);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateX(20px) translateY(110vh);
+        opacity: 0;
+      }
     }
   </style>
 </head>
 <body class="blur">
   <div id="overlay" title="Click to Enter">
-    <img src="download (2).png" alt="Click to Enter" />
+    <img src="download (2).png" alt="Click to Enter" class="main-image" />
+    <div class="falling-container"></div>
   </div>
 
-  <div id="falling-container"></div>
-
   <div id="content">
-    <img src="download (2).png" alt="Fairy Twins" />
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Twin_fairies_silhouette.png/200px-Twin_fairies_silhouette.png" alt="Fairy Twins" />
     <h1><a href="https://example.com">antiextort</a></h1>
     <div class="names">Emact, Krone, Tobagoa, Rifle, Month, Atlas, 561, V, Romance, Neptunian, Kami</div>
     <div class="channel-announcement">Our Old Channel Got Termed, So Join Our New One!</div>
@@ -135,8 +158,7 @@
   <script>
     const overlay = document.getElementById('overlay');
     const body = document.body;
-    const container = document.getElementById('falling-container');
-    const imgSrc = "download (2).png";
+    const fallingContainer = overlay.querySelector('.falling-container');
 
     overlay.addEventListener('click', () => {
       overlay.classList.add('hidden');
@@ -146,58 +168,32 @@
       }, 600);
     });
 
-    // Create falling images (like snowflakes but with your image)
-    const numberOfFlakes = 25;
+    // Create falling flakes only inside the overlay
+    const numberOfFlakes = 20;
 
     function random(min, max) {
       return Math.random() * (max - min) + min;
     }
 
     for (let i = 0; i < numberOfFlakes; i++) {
-      const flake = document.createElement('img');
-      flake.src = imgSrc;
-      flake.classList.add('falling-image');
+      const flake = document.createElement('div');
+      flake.classList.add('falling-flake');
 
-      // Random size between 15px and 40px width
-      const size = random(15, 40);
+      // Random horizontal start position (percent for responsiveness)
+      flake.style.left = random(0, 100) + 'vw';
+
+      // Random animation duration between 5s and 12s
+      flake.style.animationDuration = random(5, 12) + 's';
+
+      // Random animation delay so flakes fall staggered
+      flake.style.animationDelay = random(0, 12) + 's';
+
+      // Random size between 15 and 30 px
+      const size = random(15, 30);
       flake.style.width = size + 'px';
+      flake.style.height = size + 'px';
 
-      // Random horizontal start position
-      flake.style.left = random(0, window.innerWidth) + 'px';
-
-      // Start position just above the top, random delay so they don't fall all at once
-      flake.style.top = -size + 'px';
-
-      // Random animation duration between 6s and 12s
-      const duration = random(6, 12);
-
-      // Create a custom CSS animation using keyframes with slight horizontal oscillation
-      const animationName = `falling${i}`;
-
-      const keyframes = `
-        @keyframes ${animationName} {
-          0% {
-            transform: translateX(0) translateY(0);
-            opacity: 0.8;
-          }
-          50% {
-            transform: translateX(${random(-20, 20)}px) translateY(50vh);
-            opacity: 1;
-          }
-          100% {
-            transform: translateX(0) translateY(100vh);
-            opacity: 0;
-          }
-        }
-      `;
-
-      // Append keyframes to document stylesheet
-      const styleSheet = document.styleSheets[0];
-      styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
-
-      flake.style.animation = `${animationName} ${duration}s linear infinite`;
-
-      container.appendChild(flake);
+      fallingContainer.appendChild(flake);
     }
   </script>
 </body>

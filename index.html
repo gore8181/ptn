@@ -1,471 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Stake.com Clone - Frontend Only</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet" />
-<style>
-  /* Reset and base */
-  * {
-    box-sizing: border-box;
-  }
-  body {
-    margin: 0;
-    background: #121212;
-    color: #e0e0e0;
-    font-family: 'Roboto Mono', monospace;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
-  a {
-    color: #4caf50;
-    text-decoration: none;
-  }
-  a:hover {
-    text-decoration: underline;
-  }
-  header, footer {
-    background: #1e1e1e;
-    padding: 1rem;
-    text-align: center;
-  }
-  main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  /* Layout */
-  .container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-  .sidebar {
-    flex: 0 0 250px;
-    background: #222;
-    border-radius: 8px;
-    padding: 1rem;
-    height: fit-content;
-  }
-  .content {
-    flex: 1;
-    background: #222;
-    border-radius: 8px;
-    padding: 1rem;
-    min-height: 400px;
-    display: flex;
-    flex-direction: column;
-  }
-  /* Buttons */
-  button {
-    background: #4caf50;
-    border: none;
-    color: white;
-    padding: 0.6rem 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-  }
-  button:disabled {
-    background: #666;
-    cursor: not-allowed;
-  }
-  button:hover:not(:disabled) {
-    background: #45a049;
-  }
-  /* Forms */
-  input, select {
-    background: #333;
-    border: 1px solid #555;
-    border-radius: 4px;
-    padding: 0.5rem;
-    color: #eee;
-    font-family: 'Roboto Mono', monospace;
-    margin-bottom: 1rem;
-    width: 100%;
-  }
-  label {
-    margin-bottom: 0.25rem;
-    display: block;
-    font-weight: 600;
-  }
-  /* Tabs */
-  .tabs {
-    display: flex;
-    border-bottom: 2px solid #333;
-    margin-bottom: 1rem;
-  }
-  .tab {
-    flex: 1;
-    text-align: center;
-    padding: 0.75rem;
-    cursor: pointer;
-    font-weight: 600;
-    border-bottom: 3px solid transparent;
-    transition: border-color 0.3s;
-  }
-  .tab.active {
-    border-color: #4caf50;
-    color: #4caf50;
-  }
-  /* Games container */
-  .game-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-  /* Balance */
-  .balance {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-    font-weight: 700;
-  }
-  /* Leaderboard & History */
-  .leaderboard, .history {
-    margin-top: 1rem;
-    background: #111;
-    border-radius: 6px;
-    padding: 0.5rem;
-    max-height: 200px;
-    overflow-y: auto;
-    font-size: 0.9rem;
-  }
-  /* Responsive */
-  @media (max-width: 900px) {
-    .container {
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mines Gambling Game</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #121212;
+      color: #eee;
+      display: flex;
       flex-direction: column;
+      align-items: center;
+      padding: 20px;
     }
-    .sidebar {
-      flex: 1 1 auto;
-      order: 2;
+    h1 {
+      margin-bottom: 10px;
     }
-    .content {
-      order: 1;
+    #game {
+      display: grid;
+      grid-template-columns: repeat(5, 60px);
+      grid-gap: 10px;
+      margin: 20px 0;
     }
-  }
-</style>
+    .tile {
+      width: 60px;
+      height: 60px;
+      background: #222;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.3s;
+    }
+    .tile.safe {
+      background: #1a7f1a;
+      cursor: default;
+    }
+    .tile.mine {
+      background: #a71d1d;
+      cursor: default;
+    }
+    button, input, select {
+      font-size: 16px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: none;
+      margin: 5px;
+    }
+    button {
+      cursor: pointer;
+      background: #3a86ff;
+      color: white;
+      transition: background 0.3s;
+    }
+    button:hover:not(:disabled) {
+      background: #255fcc;
+    }
+    input[type="number"] {
+      width: 100px;
+    }
+    #status {
+      margin-top: 10px;
+      font-size: 18px;
+      min-height: 24px;
+    }
+    #controls {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  </style>
 </head>
 <body>
-<header>
-  <h1>Stake.com Clone (Frontend Only)</h1>
-</header>
-<main>
-  <div class="container">
-    <div class="sidebar" id="sidebar">
-      <!-- Login/Register UI or User Info -->
-    </div>
-    <div class="content">
-      <div class="balance" id="balanceDisplay">Balance: 0 BTC</div>
-      <div class="tabs" id="gameTabs">
-        <div class="tab active" data-game="dice">Dice</div>
-        <div class="tab" data-game="plinko">Plinko</div>
-        <div class="tab" data-game="crash">Crash</div>
-        <div class="tab" data-game="mines">Mines</div>
-      </div>
-      <div class="game-container" id="gameContainer">
-        <!-- Game UI Injected Here -->
-      </div>
-      <div class="leaderboard" id="leaderboard">
-        <h3>Leaderboard</h3>
-        <ul id="leaderboardList"></ul>
-      </div>
-      <div class="history" id="bettingHistory">
-        <h3>Betting History</h3>
-        <ul id="historyList"></ul>
-      </div>
-    </div>
+  <h1>Mines Gambling Game</h1>
+
+  <div id="controls">
+    <label>
+      Bet Amount ($):
+      <input type="number" id="bet" min="1" value="10" />
+    </label>
+
+    <label>
+      Mines:
+      <select id="minesCount">
+        <option value="3">3 (Easy)</option>
+        <option value="5" selected>5 (Medium)</option>
+        <option value="7">7 (Hard)</option>
+        <option value="10">10 (Extreme)</option>
+      </select>
+    </label>
+
+    <button id="startBtn">Start Game</button>
+    <button id="cashoutBtn" disabled>Cash Out</button>
   </div>
-</main>
-<footer>
-  &copy; 2025 Stake Clone. All bets are fake.
-</footer>
-<script>
-  // App state
-  const app = {
-    users: JSON.parse(localStorage.getItem('users') || '{}'),
-    currentUser: JSON.parse(sessionStorage.getItem('currentUser') || 'null'),
-    cryptocurrencies: ['BTC', 'ETH', 'USDT'],
-    leaderboardData: [],
-    bettingHistory: [],
-    currentGame: 'dice',
-  };
 
-  // Utils
-  function saveUsers() {
-    localStorage.setItem('users', JSON.stringify(app.users));
-  }
-  function saveSession() {
-    sessionStorage.setItem('currentUser', JSON.stringify(app.currentUser));
-  }
-  function formatCrypto(amount, currency) {
-    return amount.toFixed(8) + ' ' + currency;
-  }
-  // UI Elements
-  const sidebar = document.getElementById('sidebar');
-  const balanceDisplay = document.getElementById('balanceDisplay');
-  const gameTabs = document.getElementById('gameTabs');
-  const gameContainer = document.getElementById('gameContainer');
-  const leaderboardList = document.getElementById('leaderboardList');
-  const historyList = document.getElementById('historyList');
+  <div id="game"></div>
 
-  // Login/Register UI
-  function renderLogin() {
-    sidebar.innerHTML = `
-      <h2>Login or Register</h2>
-      <label for="username">Username</label>
-      <input type="text" id="username" autocomplete="username" />
-      <button id="btnLogin">Login</button>
-      <hr />
-      <h3>Or Register</h3>
-      <label for="regUsername">Username</label>
-      <input type="text" id="regUsername" autocomplete="username" />
-      <button id="btnRegister">Register</button>
-    `;
-    document.getElementById('btnLogin').onclick = () => {
-      const username = document.getElementById('username').value.trim();
-      if (!username) return alert('Enter username');
-      if (!app.users[username]) return alert('User not found. Please register.');
-      app.currentUser = {...app.users[username]};
-      saveSession();
-      renderApp();
-    };
-    document.getElementById('btnRegister').onclick = () => {
-      const username = document.getElementById('regUsername').value.trim();
-      if (!username) return alert('Enter username');
-      if (app.users[username]) return alert('Username taken.');
-      // Create new user with zero balances
-      app.users[username] = {
-        username,
-        balances: {
-          BTC: 0.01,
-          ETH: 0.5,
-          USDT: 50,
-        },
-        bettingHistory: [],
-      };
-      saveUsers();
-      app.currentUser = {...app.users[username]};
-      saveSession();
-      renderApp();
-    };
-  }
+  <div id="status"></div>
 
-  // User wallet & Deposit/Withdraw UI
-  function renderUserPanel() {
-    sidebar.innerHTML = `
-      <h2>Welcome, ${app.currentUser.username}</h2>
-      <button id="btnLogout">Logout</button>
-      <h3>Wallet</h3>
-      <div id="walletBalances"></div>
-      <hr />
-      <h3>Deposit / Withdraw (Fake)</h3>
-      <label for="currencySelect">Currency</label>
-      <select id="currencySelect">${app.cryptocurrencies.map(c=>`<option>${c}</option>`).join('')}</select>
-      <label for="amountInput">Amount</label>
-      <input type="number" id="amountInput" min="0" step="0.0001" value="0.01" />
-      <div>
-        <button id="btnDeposit">Deposit</button>
-        <button id="btnWithdraw">Withdraw</button>
-      </div>
-    `;
-    updateBalancesUI();
+  <script>
+    const gameContainer = document.getElementById('game');
+    const startBtn = document.getElementById('startBtn');
+    const cashoutBtn = document.getElementById('cashoutBtn');
+    const betInput = document.getElementById('bet');
+    const minesSelect = document.getElementById('minesCount');
+    const status = document.getElementById('status');
 
-    document.getElementById('btnLogout').onclick = () => {
-      app.currentUser = null;
-      saveSession();
-      renderApp();
-    };
-    document.getElementById('btnDeposit').onclick = () => {
-      const currency = document.getElementById('currencySelect').value;
-      const amount = parseFloat(document.getElementById('amountInput').value);
-      if (isNaN(amount) || amount <= 0) return alert('Enter a valid amount.');
-      app.currentUser.balances[currency] = (app.currentUser.balances[currency] || 0) + amount;
-      saveCurrentUser();
-      updateBalancesUI();
-      updateBalanceDisplay();
-      alert(`Deposited ${formatCrypto(amount, currency)}`);
-    };
-    document.getElementById('btnWithdraw').onclick = () => {
-      const currency = document.getElementById('currencySelect').value;
-      const amount = parseFloat(document.getElementById('amountInput').value);
-      if (isNaN(amount) || amount <= 0) return alert('Enter a valid amount.');
-      if ((app.currentUser.balances[currency] || 0) < amount) return alert('Insufficient balance.');
-      app.currentUser.balances[currency] -= amount;
-      saveCurrentUser();
-      updateBalancesUI();
-      updateBalanceDisplay();
-      alert(`Withdrew ${formatCrypto(amount, currency)}`);
-    };
-  }
-  function updateBalancesUI() {
-    const walletDiv = document.getElementById('walletBalances');
-    walletDiv.innerHTML = '';
-    for (const c of app.cryptocurrencies) {
-      walletDiv.innerHTML += `<div>${c}: ${formatCrypto(app.currentUser.balances[c] || 0, c)}</div>`;
-    }
-  }
-  function saveCurrentUser() {
-    app.users[app.currentUser.username] = {...app.currentUser};
-    saveUsers();
-    saveSession();
-  }
-  function updateBalanceDisplay() {
-    // Show the balance in currently selected currency (for simplicity, BTC)
-    const btcBalance = app.currentUser.balances['BTC'] || 0;
-    balanceDisplay.textContent = `Balance: ${formatCrypto(btcBalance, 'BTC')}`;
-  }
+    const gridSize = 25; // 5x5 grid
+    let mines = [];
+    let revealed = new Set();
+    let bet = 0;
+    let multiplier = 1;
+    let gameActive = false;
 
-  // Leaderboard and history with random simulated data
-  function generateLeaderboard() {
-    const names = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Hank'];
-    app.leaderboardData = [];
-    for (let i = 0; i < 8; i++) {
-      app.leaderboardData.push({
-        username: names[i],
-        profit: (Math.random() * 10).toFixed(4),
-      });
-    }
-  }
-  function renderLeaderboard() {
-    leaderboardList.innerHTML = '';
-    app.leaderboardData.forEach((entry) => {
-      const li = document.createElement('li');
-      li.textContent = `${entry.username}: +${entry.profit} BTC`;
-      leaderboardList.appendChild(li);
-    });
-  }
-  function renderBettingHistory() {
-    historyList.innerHTML = '';
-    const recentHistory = app.currentUser?.bettingHistory?.slice(-10).reverse() || [];
-    if (recentHistory.length === 0) {
-      historyList.innerHTML = '<li>No bets placed yet.</li>';
-      return;
-    }
-    recentHistory.forEach(h => {
-      const li = document.createElement('li');
-      li.textContent = `[${h.game}] Bet ${formatCrypto(h.bet, h.currency)} - ${h.result === 'win' ? 'Won' : 'Lost'} ${formatCrypto(h.amount, h.currency)}`;
-      historyList.appendChild(li);
-    });
-  }
+    function startGame() {
+      bet = parseFloat(betInput.value);
+      if (isNaN(bet) || bet <= 0) {
+        alert('Please enter a valid bet amount greater than 0.');
+        return;
+      }
+      const minesCount = parseInt(minesSelect.value);
+      multiplier = 1;
+      revealed.clear();
+      gameActive = true;
+      status.textContent = `Game started! Bet: $${bet.toFixed(2)}. Click tiles to reveal safe spots.`;
 
-  // Game switching
-  function setupTabs() {
-    [...gameTabs.children].forEach(tab => {
-      tab.onclick = () => {
-        if (tab.classList.contains('active')) return;
-        [...gameTabs.children].forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        app.currentGame = tab.dataset.game;
-        renderGame();
-      };
-    });
-  }
+      cashoutBtn.disabled = false;
+      startBtn.disabled = true;
+      betInput.disabled = true;
+      minesSelect.disabled = true;
 
-  // --- Games implementations ---
+      // Generate mines
+      mines = generateMines(minesCount);
 
-  // Dice game
-  function renderDiceGame() {
-    gameContainer.innerHTML = `
-      <h2>Dice</h2>
-      <label for="diceBetAmount">Bet Amount (BTC)</label>
-      <input type="number" id="diceBetAmount" min="0.00000001" step="0.00000001" value="0.001" />
-      <label for="diceTarget">Target (1-99)</label>
-      <input type="number" id="diceTarget" min="1" max="99" value="50" />
-      <button id="diceRollBtn">Roll</button>
-      <div id="diceResult" style="margin-top:1rem; font-weight:bold;"></div>
-    `;
-    const betInput = document.getElementById('diceBetAmount');
-    const targetInput = document.getElementById('diceTarget');
-    const rollBtn = document.getElementById('diceRollBtn');
-    const resultDiv = document.getElementById('diceResult');
-
-    rollBtn.onclick = () => {
-      const bet = parseFloat(betInput.value);
-      const target = parseInt(targetInput.value);
-      if (isNaN(bet) || bet <= 0) return alert('Enter a valid bet amount');
-      if (bet > (app.currentUser.balances.BTC || 0)) return alert('Insufficient BTC balance');
-      if (isNaN(target) || target < 1 || target > 99) return alert('Target must be between 1 and 99');
-
-      // Dice roll 1-100
-      const roll = Math.floor(Math.random() * 100) + 1;
-      const win = roll < target;
-      // Calculate payout = bet * (99 / target) * 0.99 house edge
-      const payoutMultiplier = (99 / target) * 0.99;
-      const payout = win ? bet * payoutMultiplier : 0;
-
-      // Update balance
-      app.currentUser.balances.BTC -= bet;
-      app.currentUser.balances.BTC += payout;
-      saveCurrentUser();
-      updateBalanceDisplay();
-
-      // Save bet history
-      app.currentUser.bettingHistory.push({
-        game: 'Dice',
-        bet,
-        result: win ? 'win' : 'lose',
-        amount: payout,
-        currency: 'BTC',
-        timestamp: Date.now(),
-      });
-      renderBettingHistory();
-
-      // Show animation
-      resultDiv.textContent = 'Rolling...';
-      setTimeout(() => {
-        resultDiv.textContent = `Roll: ${roll} - You ${win ? 'Win' : 'Lose'} ${formatCrypto(payout, 'BTC')}`;
-      }, 800);
-    };
-  }
-
-  // Plinko game (simple version)
-  function renderPlinkoGame() {
-    gameContainer.innerHTML = `
-      <h2>Plinko</h2>
-      <label for="plinkoBetAmount">Bet Amount (ETH)</label>
-      <input type="number" id="plinkoBetAmount" min="0.0001" step="0.0001" value="0.01" />
-      <button id="plinkoPlayBtn">Play</button>
-      <div id="plinkoResult" style="margin-top:1rem; font-weight:bold;"></div>
-      <canvas id="plinkoCanvas" width="300" height="300" style="background:#111; border-radius:8px; margin-top:1rem;"></canvas>
-    `;
-    const betInput = document.getElementById('plinkoBetAmount');
-    const playBtn = document.getElementById('plinkoPlayBtn');
-    const resultDiv = document.getElementById('plinkoResult');
-    const canvas = document.getElementById('plinkoCanvas');
-    const ctx = canvas.getContext('2d');
-
-    function drawPlinkoPeg(x, y, radius = 5) {
-      ctx.beginPath();
-      ctx.arc(x, y, radius, 0, 2 * Math.PI);
-      ctx.fillStyle = '#4caf50';
-      ctx.fill();
-    }
-
-    function clearCanvas() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
-
-    function drawBoard() {
-      clearCanvas();
-      const rows = 10;
-      const spacingX = 30;
-      const spacingY = 25;
-      for (let r = 0; r < rows; r++) {
-        const offset = (r % 2) * spacingX / 2;
-        for (let i = 0; i < 10; i++) {
-          drawPlinkoPeg(offset + i * spacingX, r * spacingY + 20);
-        }
+      // Build grid
+      gameContainer.innerHTML = '';
+      for (let i = 0; i < gridSize; i++) {
+        const tile = document.createElement('div');
+        tile.classList.add('tile');
+        tile.dataset.index = i;
+        tile.addEventListener('click', () => onTileClick(i));
+        gameContainer.appendChild(tile);
       }
     }
 
-    function animateBall(finalSlot) {
-      clearCanvas();
-      drawBoard();
-      let y = 0;
-      let x = canvas.width / 
+    function generateMines(count) {
+      let minePositions = new Set();
+      while (minePositions.size < count) {
+        minePositions.add(Math.floor(Math.random() * gridSize));
+      }
+      return minePositions;
+    }
+
+    function onTileClick(index) {
+      if (!gameActive) return;
+      if (revealed.has(index)) return;
+
+      const tile = gameContainer.children[index];
+
+      if (mines.has(index)) {
+        // Hit mine - lose
+        tile.classList.add('mine');
+        tile.textContent = '💣';
+        endGame(false);
+      } else {
+        // Safe tile
+        tile.classList.add('safe');
+        tile.textContent = '✔️';
+        revealed.add(index);
+        // Increase multiplier for each safe tile (simple multiplier example)
+        multiplier = 1 + revealed.size * 0.3;
+        status.textContent = `Safe! Current multiplier: x${multiplier.toFixed(2)}. Click more or cash out.`;
+      }
+    }
+
+    function endGame(won) {
+      gameActive = false;
+      cashoutBtn.disabled = true;
+      startBtn.disabled = false;
+      betInput.disabled = false;
+      minesSelect.disabled = false;
+
+      if (won) {
+        const winnings = bet * multiplier;
+        status.textContent = `You cashed out! You won $${winnings.toFixed(2)}.`;
+      } else {
+        // Reveal all mines
+        mines.forEach((mineIdx) => {
+          const mineTile = gameContainer.children[mineIdx];
+          if (!mineTile.classList.contains('mine')) {
+            mineTile.classList.add('mine');
+            mineTile.textContent = '💣';
+          }
+        });
+        status.textContent = `Boom! You hit a mine. You lost your bet of $${bet.toFixed(2)}. Try again!`;
+      }
+    }
+
+    cashoutBtn.addEventListener('click', () => {
+      if (!gameActive) return;
+      endGame(true);
+    });
+
+    startBtn.addEventListener('click', startGame);
+  </script>
+</body>
+</html>

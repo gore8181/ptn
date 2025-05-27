@@ -2,219 +2,199 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>meo.wtf — Combating Sextortion</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crypto Casino & Market (Demo)</title>
+  <link rel="stylesheet" href="style.css" />
   <style>
-    html {
-      scroll-behavior: smooth;
-    }
-    body {
-      background: #000;
-      color: #fff;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
-      text-align: center;
-    }
-    section {
-      padding: 4rem 2rem;
-      max-width: 800px;
-      margin: 2rem auto;
-      background-color: #111;
-      border: 2px solid #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(255,255,255,0.1);
-      transition: transform 0.3s ease, opacity 0.3s ease;
-    }
-    .bg-light {
-      background-color: #111;
-    }
-    .btn {
-      display: inline-block;
-      padding: 0.75rem 1.5rem;
-      background: #fff;
-      color: #000;
-      text-decoration: none;
-      border-radius: 4px;
-      transition: background 0.3s ease, color 0.3s ease;
-    }
-    .btn:hover {
-      background: #e0e0e0;
-      color: #000;
-    }
-    .fade-in {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-    }
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .info-cards {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-    .card {
-      background: #000;
-      border: 2px solid #fff;
-      border-radius: 8px;
-      padding: 1.5rem;
-      box-shadow: 0 2px 6px rgba(255,255,255,0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 6px 16px rgba(255, 255, 255, 0.3);
-    }
-    ul, ol {
-      text-align: left;
-      max-width: 600px;
-      margin: 1rem auto;
-    }
-    .nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 2rem;
-      background: #000;
-      border-bottom: 1px solid #fff;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-    .nav a {
-      color: #fff;
-      margin: 0 0.5rem;
-      text-decoration: none;
-    }
-    .nav .logo {
-      font-weight: bold;
-      font-size: 1.5rem;
-    }
-    .site-footer {
-      padding: 2rem;
-      background: #000;
-      color: #888;
-    }
-    #visitor-counter {
-      margin: 2rem auto 1rem auto;
-      max-width: 800px;
-      border: 2px solid #fff;
-      padding: 1rem;
-      border-radius: 8px;
-      background-color: #111;
-    }
+    /* Dark theme base */
+    body { background: #121212; color: #eee; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
+    header { background: #1f1f1f; padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+    h1 { margin: 0; font-size: 1.5rem; }
+    nav button { background: #292929; color: #fff; border: none; padding: 0.5rem 1rem; margin: 0 0.2rem; border-radius: 4px; cursor: pointer; transition: background .2s; }
+    nav button.active, nav button:hover { background: #3a3a3a; }
+    main { padding: 2rem; }
+    section { display: none; }
+    section.active { display: block; }
+    button { border: none; border-radius: 4px; padding: 0.6rem 1.2rem; cursor: pointer; background: #2e7d32; color: #fff; transition: background .2s; }
+    button:hover { background: #388e3c; }
+    .reels { display: flex; justify-content: center; margin: 1rem 0; }
+    .reels span { background: #222; border: 2px solid #555; border-radius: 8px; padding: 1rem; margin: 0 0.5rem; width: 60px; text-align: center; font-size: 1.8rem; }
+    .fade { animation: fade 0.5s; }
+    @keyframes fade { from { opacity: 0.2; } to { opacity: 1; } }
+    ul { list-style: none; padding: 0; }
+    ul li { margin: 0.5rem 0; }
+    .leaderboard, .market-table { margin-top: 1rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+    th, td { padding: 0.5rem; border: 1px solid #444; text-align: center; }
+    input[type=number] { width: 60px; padding: 0.2rem; }
   </style>
 </head>
 <body>
-  <section id="visitor-counter" class="fade-in">
-    <h2>Lives Saved</h2>
-    <p>Times reached out <span id="visit-number">0</span> time(s).</p>
-  </section>
-
-  <header class="site-header">
-    <nav class="nav">
-      <a href="#home" class="logo">meo.wtf</a>
-      <ul class="nav-links" style="list-style:none; display:flex; padding:0; margin:0;">
-        <li><a href="#what">What is Sextortion?</a></li>
-        <li><a href="#protect">Protect Yourself</a></li>
-        <li><a href="#victim">If You’re a Victim</a></li>
-        <li><a href="#resources">Resources</a></li>
-        <li><a href="#contribute">Contribute</a></li>
-      </ul>
+  <header>
+    <h1>🎲 Crypto Casino & Market</h1>
+    <nav>
+      <button id="btn-slots" class="active">🎰 Slots</button>
+      <button id="btn-blackjack">🃏 Blackjack</button>
+      <button id="btn-dice">🎲 Dice</button>
+      <button id="btn-wallet">🪙 Wallet</button>
+      <button id="btn-leader">🏆 Leaderboard</button>
+      <button id="btn-market">📈 Stock Market</button>
+      <button id="btn-disclaimer">⚠️ Disclaimer</button>
     </nav>
-    <div id="home" class="hero fade-in" style="padding: 4rem 2rem;">
-      <h1>Say No to Sextortion</h1>
-      <p>Learn to recognize, avoid, and fight back against sextortion.</p>
-      <a href="#what" class="btn">Learn More</a>
-    </div>
   </header>
-
-  <section id="what" class="fade-in">
-    <h2>What is Sextortion?</h2>
-    <p>Sextortion is a form of blackmail where someone threatens to share intimate images or recordings unless demands are met.</p>
-    <div class="info-cards">
-      <div class="card fade-in">
-        <h3>Step 1</h3>
-        <p>Perpetrator obtains intimate content.</p>
+  <main>
+    <!-- Slots -->
+    <section id="slots" class="active">
+      <h2>🎰 Slot Machine</h2>
+      <div class="reels">
+        <span id="reel1">BTC</span>
+        <span id="reel2">ETH</span>
+        <span id="reel3">SOL</span>
       </div>
-      <div class="card fade-in">
-        <h3>Step 2</h3>
-        <p>Threats to expose content publicly.</p>
+      <button onclick="spinSlots()">Spin</button>
+      <p id="slot-result"></p>
+      <audio id="slot-sound" src="slot-sound.mp3"></audio>
+    </section>
+    <!-- Blackjack -->
+    <section id="blackjack">
+      <h2>🃏 Blackjack</h2>
+      <p>Your Hand: <span id="player-hand"></span> (<span id="player-total"></span>)</p>
+      <p>Dealer: <span id="dealer-hand"></span> (<span id="dealer-total"></span>)</p>
+      <button onclick="dealBlackjack()">Deal</button>
+      <button onclick="hit()">Hit</button>
+      <button onclick="stand()">Stand</button>
+      <p id="blackjack-result"></p>
+      <audio id="card-sound" src="card-sound.mp3"></audio>
+    </section>
+    <!-- Dice -->
+    <section id="dice">
+      <h2>🎲 Dice Game</h2>
+      <p>Guess the roll (1–6): <input type="number" id="guess" min="1" max="6" /></p>
+      <button onclick="rollDice()">Roll</button>
+      <p id="dice-result"></p>
+      <audio id="dice-sound" src="dice-sound.mp3"></audio>
+    </section>
+    <!-- Wallet -->
+    <section id="wallet">
+      <h2>🪙 Wallet Balances</h2>
+      <ul>
+        <li>BTC: <span id="btc-balance"></span></li>
+        <li>ETH: <span id="eth-balance"></span></li>
+        <li>LTC: <span id="ltc-balance"></span></li>
+        <li>SOL: <span id="sol-balance"></span></li>
+      </ul>
+      <button onclick="resetWallet()">Reset Balances</button>
+    </section>
+    <!-- Leaderboard -->
+    <section id="leaderboard">
+      <h2>🏆 Leaderboard</h2>
+      <div class="leaderboard">
+        <table>
+          <thead><tr><th>Game</th><th>Top Balance</th></tr></thead>
+          <tbody id="leader-body"></tbody>
+        </table>
       </div>
-      <div class="card fade-in">
-        <h3>Step 3</h3>
-        <p>Demands payment, images, or other favors.</p>
+    </section>
+    <!-- Stock Market -->
+    <section id="market">
+      <h2>📈 Stock Market Simulator</h2>
+      <p>Select stock:</p>
+      <select id="stock-select">
+        <option value="AAPL">AAPL</option>
+        <option value="GOOG">GOOG</option>
+        <option value="TSLA">TSLA</option>
+      </select>
+      <p>Shares to buy/sell: <input type="number" id="stock-qty" value="1" min="1" /></p>
+      <button onclick="tradeStock(true)">Buy</button>
+      <button onclick="tradeStock(false)">Sell</button>
+      <p id="market-result"></p>
+      <div class="market-table">
+        <table>
+          <thead><tr><th>Stock</th><th>Price</th><th>Owned</th></tr></thead>
+          <tbody id="market-body"></tbody>
+        </table>
       </div>
-    </div>
-  </section>
-
-  <section id="protect" class="bg-light fade-in">
-    <h2>Protect Yourself</h2>
-    <ul>
-      <li>Never share intimate images with strangers.</li>
-      <li>Use strong privacy settings.</li>
-      <li>Enable two-factor authentication.</li>
-      <li>Be wary of unsolicited requests.</li>
-    </ul>
-  </section>
-
-  <section id="victim" class="fade-in">
-    <h2>If You’re a Victim</h2>
-    <ol>
-      <li>Do NOT pay or comply.</li>
-      <li>Preserve evidence (screenshots, messages).</li>
-      <li>Report to law enforcement.</li>
-      <li>Contact platform support.</li>
-      <li>Seek trusted support (friends, counselors).</li>
-    </ol>
-  </section>
-
-  <section id="resources" class="bg-light fade-in">
-    <h2>Resources</h2>
-    <ul>
-      <li><a href="https://www.fbi.gov" target="_blank">FBI</a></li>
-      <li><a href="https://www.ic3.gov" target="_blank">IC3 (Cyber Crime)</a></li>
-      <li><a href="https://www.rainn.org" target="_blank">RAINN</a></li>
-      <li><a href="https://www.google.com/search?q=local+police+phone+number&sca_esv=4b32451117f11e5d&rlz=1C1VDKB_enUS1153US1153&sxsrf=AE3TifM2wh8BZiadKvOJREG1Z19-O0tb6w%3A1748227770200&ei=utYzaMKEDOC3wN4Ppt3AkAQ&ved=0ahUKEwjCyer5j8CNAxXgG9AFHaYuEEIQ4dUDCBA&uact=5&oq=local+police+phone+number&gs_lp=Egxnd3Mtd2l6LXNlcnAiGWxvY2FsIHBvbGljZSBwaG9uZSBudW1iZXIyBRAAGIAEMgUQABiABDIFEAAYgAQyBhAAGBYYHjIGEAAYFhgeMgYQABgWGB4yBhAAGBYYHjIGEAAYFhgeMgYQABgWGB4yBhAAGBYYHkj6GlDvAlj0GXABeAGQAQCYAZMBoAGXDKoBBDAuMTO4AQPIAQD4AQGYAg6gAsoMwgIKEAAYsAMY1gQYR8ICDRAAGLADGNYEGEcYyQPCAg4QABiABBiwAxiSAxiKBcICCBAAGIAEGLEDwgIQEAAYgAQYsQMYQxiDARiKBcICCBAAGIAEGJIDwgIKEAAYgAQYQxiKBcICCBAAGIAEGMkDmAMAiAYBkAYKkgcEMS4xM6AHvVqyBwQwLjEzuAfGDA&sclient=gws-wiz-serp">Local police contact</a></li>
-    </ul>
-  </section>
-
-  <section id="contribute" class="fade-in">
-    <h2>Contribute or Volunteer</h2>
-    <p>Help spread awareness, volunteer your skills, or share your story anonymously.</p>
-    <a href="#" class="btn">Get Involved</a>
-  </section>
-
-  <footer class="site-footer fade-in">
-    <p>&copy; this guide was made by neirvana</p>
-  </footer>
-
+    </section>
+    <!-- Disclaimer -->
+    <section id="disclaimer">
+      <h2>⚠️ Disclaimer</h2>
+      <p>This demo uses fake balances and simulated games. No real crypto or stocks involved.</p>
+    </section>
+  </main>
+  <footer><p>&copy; 2025 Crypto Casino & Market (Demo)</p></footer>
   <script>
-    // Visitor counter stored in localStorage
-    let visits = localStorage.getItem('visits');
-    if (!visits) {
-      visits = 0;
+    // Setup
+    const tabs = ['slots','blackjack','dice','wallet','leaderboard','market','disclaimer'];
+    tabs.forEach(id => document.getElementById('btn-'+id).onclick = () => switchTab(id));
+    function switchTab(id) {
+      tabs.forEach(t => document.getElementById(t).classList.remove('active'));
+      tabs.forEach(t => document.getElementById('btn-'+t).classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.getElementById('btn-'+id).classList.add('active');
+      renderLeaderboard();
+      renderMarket();
     }
-    visits = parseInt(visits) + 1;
-    localStorage.setItem('visits', visits);
-    document.getElementById('visit-number').textContent = visits;
+    const crypto = ['BTC','ETH','LTC','SOL'];
+    let balances = JSON.parse(localStorage.getItem('balances')) || { BTC:1.5,ETH:10,LTC:500,SOL:1000 };
+    function saveBalances(){ localStorage.setItem('balances',JSON.stringify(balances)); }
+    function updateWallet(){ document.getElementById('btc-balance').textContent=balances.BTC.toFixed(2);
+      document.getElementById('eth-balance').textContent=balances.ETH.toFixed(2);
+      document.getElementById('ltc-balance').textContent=balances.LTC;
+      document.getElementById('sol-balance').textContent=balances.SOL; saveBalances(); }
+    function resetWallet(){ balances={BTC:1.5,ETH:10,LTC:500,SOL:1000}; updateWallet(); }
 
-    // Scroll fade-in animations
-    const faders = document.querySelectorAll('.fade-in');
-    const options = { threshold: 0.1 };
-    const appearOnScroll = new IntersectionObserver(function(entries, observer) {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
+    // Slot Machine
+    function spinSlots(){ document.getElementById('slot-sound').play();
+      crypto.forEach((c,i)=>{
+        const val = crypto[Math.floor(Math.random()*crypto.length)];
+        const el = document.getElementById('reel'+(i+1));
+        el.textContent=val; el.classList.add('fade'); setTimeout(()=>el.classList.remove('fade'),400);
       });
-    }, options);
-    faders.forEach(fadeEl => {
-      appearOnScroll.observe(fadeEl);
-    });
+      const [r1,r2,r3] = crypto.map((_,i)=>document.getElementById('reel'+(i+1)).textContent);
+      let msg=''; let amt=0.05;
+      if(r1===r2&&r2===r3){ balances[r1]+=amt; msg=`You won +${amt} ${r1}!`; } else { balances[r1]-=amt; msg=`You lost -${amt} ${r1}.`; }
+      document.getElementById('slot-result').textContent=msg; updateWallet(); saveRecord('Slots',balances[r1]); }
+
+    // Blackjack
+    let pHand=[], dHand=[];
+    function dealBlackjack(){ document.getElementById('card-sound').play(); pHand=[getCard(),getCard()]; dHand=[getCard(),getCard()]; renderBJ(); }
+    function hit(){ document.getElementById('card-sound').play(); pHand.push(getCard()); renderBJ(); }
+    function stand(){ document.getElementById('card-sound').play(); while(getTotal(dHand)<17) dHand.push(getCard()); renderBJ(true); }
+    function getCard(){ return Math.floor(Math.random()*11)+1; }
+    function getTotal(h){ return h.reduce((a,b)=>a+b,0); }
+    function renderBJ(finish=false){ document.getElementById('player-hand').textContent=pHand.join(', ');
+      document.getElementById('player-total').textContent=getTotal(pHand);
+      document.getElementById('dealer-hand').textContent=dHand.join(', ');
+      document.getElementById('dealer-total').textContent=getTotal(dHand);
+      let res=''; if(finish){ const pt=getTotal(pHand), dt=getTotal(dHand);
+        if(pt>21){ res='Bust!'; balances.ETH-=0.1; }
+        else if(dt>21||pt>dt){ res='You win!'; balances.ETH+=0.1; }
+        else if(pt===dt){ res="Tie!"; }
+        else { res='Dealer wins!'; balances.ETH-=0.1; }
+        document.getElementById('blackjack-result').textContent=res; updateWallet(); saveRecord('Blackjack',balances.ETH);
+      }
+    }
+
+    // Dice
+    function rollDice(){ document.getElementById('dice-sound').play(); const guess=parseInt(document.getElementById('guess').value);
+      const roll=Math.floor(Math.random()*6)+1; let msg=''; if(guess===roll){ balances.LTC+=10; msg=`Correct! Rolled ${roll}. +10 LTC`; }
+      else { balances.LTC-=5; msg=`Wrong! Rolled ${roll}. -5 LTC`; }
+      document.getElementById('dice-result').textContent=msg; updateWallet(); saveRecord('Dice',balances.LTC); }
+
+    // Leaderboard
+    function saveRecord(game,val){ const lb=JSON.parse(localStorage.getItem('leaderboard'))||{}; lb[game]=Math.max(lb[game]||0,val); localStorage.setItem('leaderboard',JSON.stringify(lb)); }
+    function renderLeaderboard(){ const lb=JSON.parse(localStorage.getItem('leaderboard'))||{}; const tbody=document.getElementById('leader-body'); tbody.innerHTML=''; for(const g in lb){ const row=`<tr><td>${g}</td><td>${lb[g].toFixed(2)}</td></tr>`; tbody.insertAdjacentHTML('beforeend',row);} }
+
+    // Stock Market
+    let market={ AAPL:150, GOOG:2800, TSLA:700 };
+    let portfolio=JSON.parse(localStorage.getItem('portfolio'))||{AAPL:0,GOOG:0,TSLA:0};
+    function renderMarket(){ const mb=document.getElementById('market-body'); mb.innerHTML=''; for(const s in market){ mb.insertAdjacentHTML('beforeend',`<tr><td>${s}</td><td>$${market[s].toFixed(2)}</td><td>${portfolio[s]}</td></tr>`);} }
+    function tradeStock(buy){ const sym=document.getElementById('stock-select').value; const qty=parseInt(document.getElementById('stock-qty').value);
+      const price=market[sym]; let msg=''; if(buy){ portfolio[sym]+=qty; balances.BTC-= (price/50000)*qty; msg=`Bought ${qty} ${sym}`; } else { portfolio[sym]=Math.max(0,portfolio[sym]-qty); balances.BTC+= (price/50000)*qty; msg=`Sold ${qty} ${sym}`; }
+      document.getElementById('market-result').textContent=msg; updateWallet(); localStorage.setItem('portfolio',JSON.stringify(portfolio)); saveRecord('Market',balances.BTC); renderMarket(); }
+
+    // Init
+    updateWallet(); renderLeaderboard(); renderMarket();
   </script>
 </body>
 </html>

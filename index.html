@@ -2,31 +2,130 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Crypto Casino & Market (Demo)</title>
-  <link rel="stylesheet" href="style.css" />
   <style>
     /* Dark theme base */
-    body { background: #121212; color: #eee; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
-    header { background: #1f1f1f; padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
-    h1 { margin: 0; font-size: 1.5rem; }
-    nav button { background: #292929; color: #fff; border: none; padding: 0.5rem 1rem; margin: 0 0.2rem; border-radius: 4px; cursor: pointer; transition: background .2s; }
-    nav button.active, nav button:hover { background: #3a3a3a; }
-    main { padding: 2rem; }
-    section { display: none; }
-    section.active { display: block; }
-    button { border: none; border-radius: 4px; padding: 0.6rem 1.2rem; cursor: pointer; background: #2e7d32; color: #fff; transition: background .2s; }
-    button:hover { background: #388e3c; }
-    .reels { display: flex; justify-content: center; margin: 1rem 0; }
-    .reels span { background: #222; border: 2px solid #555; border-radius: 8px; padding: 1rem; margin: 0 0.5rem; width: 60px; text-align: center; font-size: 1.8rem; }
-    .fade { animation: fade 0.5s; }
-    @keyframes fade { from { opacity: 0.2; } to { opacity: 1; } }
-    ul { list-style: none; padding: 0; }
-    ul li { margin: 0.5rem 0; }
-    .leaderboard, .market-table { margin-top: 1rem; }
-    table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
-    th, td { padding: 0.5rem; border: 1px solid #444; text-align: center; }
-    input[type=number] { width: 60px; padding: 0.2rem; }
+    body {
+      background: #121212;
+      color: #eee;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #1f1f1f;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    nav button {
+      background: #292929;
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      margin: 0 0.2rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    nav button.active,
+    nav button:hover {
+      background: #3a3a3a;
+    }
+    main {
+      padding: 2rem;
+    }
+    section {
+      display: none;
+    }
+    section.active {
+      display: block;
+    }
+    button {
+      border: none;
+      border-radius: 4px;
+      padding: 0.6rem 1.2rem;
+      cursor: pointer;
+      background: #2e7d32;
+      color: #fff;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #388e3c;
+    }
+    .reels {
+      display: flex;
+      justify-content: center;
+      margin: 1rem 0;
+    }
+    .reels span {
+      background: #222;
+      border: 2px solid #555;
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 0 0.5rem;
+      width: 60px;
+      text-align: center;
+      font-size: 1.8rem;
+    }
+    .fade {
+      animation: fade 0.5s;
+    }
+    @keyframes fade {
+      from {
+        opacity: 0.2;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    ul li {
+      margin: 0.5rem 0;
+    }
+    .leaderboard,
+    .market-table {
+      margin-top: 1rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.5rem;
+    }
+    th,
+    td {
+      padding: 0.5rem;
+      border: 1px solid #444;
+      text-align: center;
+    }
+    input[type='number'] {
+      width: 60px;
+      padding: 0.2rem;
+    }
+    /* Wallet deposit/withdraw form */
+    #wallet-deposit,
+    #wallet-withdraw {
+      margin: 1rem 0;
+    }
+    #wallet-deposit input,
+    #wallet-withdraw input {
+      width: 100px;
+      margin-right: 0.5rem;
+      padding: 0.3rem;
+      border-radius: 4px;
+      border: 1px solid #555;
+      background: #222;
+      color: #eee;
+    }
   </style>
 </head>
 <body>
@@ -53,8 +152,10 @@
       </div>
       <button onclick="spinSlots()">Spin</button>
       <p id="slot-result"></p>
-      <audio id="slot-sound" src="slot-sound.mp3"></audio>
+      <!-- Audio elements can be linked if you have files -->
+      <!-- <audio id="slot-sound" src="slot-sound.mp3"></audio> -->
     </section>
+
     <!-- Blackjack -->
     <section id="blackjack">
       <h2>🃏 Blackjack</h2>
@@ -64,16 +165,18 @@
       <button onclick="hit()">Hit</button>
       <button onclick="stand()">Stand</button>
       <p id="blackjack-result"></p>
-      <audio id="card-sound" src="card-sound.mp3"></audio>
+      <!-- <audio id="card-sound" src="card-sound.mp3"></audio> -->
     </section>
+
     <!-- Dice -->
     <section id="dice">
       <h2>🎲 Dice Game</h2>
       <p>Guess the roll (1–6): <input type="number" id="guess" min="1" max="6" /></p>
       <button onclick="rollDice()">Roll</button>
       <p id="dice-result"></p>
-      <audio id="dice-sound" src="dice-sound.mp3"></audio>
+      <!-- <audio id="dice-sound" src="dice-sound.mp3"></audio> -->
     </section>
+
     <!-- Wallet -->
     <section id="wallet">
       <h2>🪙 Wallet Balances</h2>
@@ -84,17 +187,49 @@
         <li>SOL: <span id="sol-balance"></span></li>
       </ul>
       <button onclick="resetWallet()">Reset Balances</button>
+
+      <div id="wallet-deposit">
+        <h3>Deposit</h3>
+        <select id="deposit-crypto">
+          <option value="BTC">BTC</option>
+          <option value="ETH">ETH</option>
+          <option value="LTC">LTC</option>
+          <option value="SOL">SOL</option>
+        </select>
+        <input type="number" id="deposit-amount" min="0.01" step="0.01" placeholder="Amount" />
+        <button onclick="deposit()">Deposit</button>
+      </div>
+
+      <div id="wallet-withdraw">
+        <h3>Withdraw (Fake)</h3>
+        <select id="withdraw-crypto">
+          <option value="BTC">BTC</option>
+          <option value="ETH">ETH</option>
+          <option value="LTC">LTC</option>
+          <option value="SOL">SOL</option>
+        </select>
+        <input type="number" id="withdraw-amount" min="0.01" step="0.01" placeholder="Amount" />
+        <button onclick="withdraw()">Withdraw</button>
+      </div>
+      <p id="wallet-msg"></p>
     </section>
+
     <!-- Leaderboard -->
     <section id="leaderboard">
       <h2>🏆 Leaderboard</h2>
       <div class="leaderboard">
         <table>
-          <thead><tr><th>Game</th><th>Top Balance</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Game</th>
+              <th>Top Balance</th>
+            </tr>
+          </thead>
           <tbody id="leader-body"></tbody>
         </table>
       </div>
     </section>
+
     <!-- Stock Market -->
     <section id="market">
       <h2>📈 Stock Market Simulator</h2>
@@ -110,91 +245,192 @@
       <p id="market-result"></p>
       <div class="market-table">
         <table>
-          <thead><tr><th>Stock</th><th>Price</th><th>Owned</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Stock</th>
+              <th>Price</th>
+              <th>Owned</th>
+            </tr>
+          </thead>
           <tbody id="market-body"></tbody>
         </table>
       </div>
     </section>
+
     <!-- Disclaimer -->
     <section id="disclaimer">
       <h2>⚠️ Disclaimer</h2>
       <p>This demo uses fake balances and simulated games. No real crypto or stocks involved.</p>
     </section>
   </main>
-  <footer><p>&copy; 2025 Crypto Casino & Market (Demo)</p></footer>
+  <footer>
+    <p>&copy; 2025 Crypto Casino & Market (Demo)</p>
+  </footer>
   <script>
-    // Setup
-    const tabs = ['slots','blackjack','dice','wallet','leaderboard','market','disclaimer'];
-    tabs.forEach(id => document.getElementById('btn-'+id).onclick = () => switchTab(id));
+    // Setup tabs
+    const tabs = ['slots', 'blackjack', 'dice', 'wallet', 'leaderboard', 'market', 'disclaimer'];
+    tabs.forEach((id) => {
+      document.getElementById('btn-' + id).onclick = () => switchTab(id);
+    });
     function switchTab(id) {
-      tabs.forEach(t => document.getElementById(t).classList.remove('active'));
-      tabs.forEach(t => document.getElementById('btn-'+t).classList.remove('active'));
+      tabs.forEach((t) => document.getElementById(t).classList.remove('active'));
+      tabs.forEach((t) => document.getElementById('btn-' + t).classList.remove('active'));
       document.getElementById(id).classList.add('active');
-      document.getElementById('btn-'+id).classList.add('active');
+      document.getElementById('btn-' + id).classList.add('active');
       renderLeaderboard();
       renderMarket();
+      updateWallet();
     }
-    const crypto = ['BTC','ETH','LTC','SOL'];
-    let balances = JSON.parse(localStorage.getItem('balances')) || { BTC:1.5,ETH:10,LTC:500,SOL:1000 };
-    function saveBalances(){ localStorage.setItem('balances',JSON.stringify(balances)); }
-    function updateWallet(){ document.getElementById('btc-balance').textContent=balances.BTC.toFixed(2);
-      document.getElementById('eth-balance').textContent=balances.ETH.toFixed(2);
-      document.getElementById('ltc-balance').textContent=balances.LTC;
-      document.getElementById('sol-balance').textContent=balances.SOL; saveBalances(); }
-    function resetWallet(){ balances={BTC:1.5,ETH:10,LTC:500,SOL:1000}; updateWallet(); }
+
+    const crypto = ['BTC', 'ETH', 'LTC', 'SOL'];
+    let balances =
+      JSON.parse(localStorage.getItem('balances')) || { BTC: 1.5, ETH: 10, LTC: 500, SOL: 1000 };
+
+    function saveBalances() {
+      localStorage.setItem('balances', JSON.stringify(balances));
+    }
+
+    function updateWallet() {
+      document.getElementById('btc-balance').textContent = balances.BTC.toFixed(4);
+      document.getElementById('eth-balance').textContent = balances.ETH.toFixed(4);
+      document.getElementById('ltc-balance').textContent = balances.LTC.toFixed(2);
+      document.getElementById('sol-balance').textContent = balances.SOL.toFixed(2);
+      saveBalances();
+    }
+
+    function resetWallet() {
+      balances = { BTC: 1.5, ETH: 10, LTC: 500, SOL: 1000 };
+      updateWallet();
+      alert('Wallet balances reset.');
+    }
+
+    // Deposit
+    function deposit() {
+      const c = document.getElementById('deposit-crypto').value;
+      const amt = parseFloat(document.getElementById('deposit-amount').value);
+      const msgEl = document.getElementById('wallet-msg');
+      if (isNaN(amt) || amt <= 0) {
+        msgEl.textContent = 'Enter a valid deposit amount.';
+        return;
+      }
+      balances[c] += amt;
+      updateWallet();
+      msgEl.textContent = `Deposited +${amt.toFixed(4)} ${c}.`;
+    }
+
+    // Withdraw (fake)
+    function withdraw() {
+      const c = document.getElementById('withdraw-crypto').value;
+      const amt = parseFloat(document.getElementById('withdraw-amount').value);
+      const msgEl = document.getElementById('wallet-msg');
+      if (isNaN(amt) || amt <= 0) {
+        msgEl.textContent = 'Enter a valid withdrawal amount.';
+        return;
+      }
+      if (balances[c] < amt) {
+        msgEl.textContent = `Insufficient ${c} balance for withdrawal.`;
+        return;
+      }
+      // Fake withdrawal: just deduct balance but no real transfer
+      balances[c] -= amt;
+      updateWallet();
+      msgEl.textContent = `Withdrew -${amt.toFixed(4)} ${c} (fake).`;
+    }
 
     // Slot Machine
-    function spinSlots(){ document.getElementById('slot-sound').play();
-      crypto.forEach((c,i)=>{
-        const val = crypto[Math.floor(Math.random()*crypto.length)];
-        const el = document.getElementById('reel'+(i+1));
-        el.textContent=val; el.classList.add('fade'); setTimeout(()=>el.classList.remove('fade'),400);
-      });
-      const [r1,r2,r3] = crypto.map((_,i)=>document.getElementById('reel'+(i+1)).textContent);
-      let msg=''; let amt=0.05;
-      if(r1===r2&&r2===r3){ balances[r1]+=amt; msg=`You won +${amt} ${r1}!`; } else { balances[r1]-=amt; msg=`You lost -${amt} ${r1}.`; }
-      document.getElementById('slot-result').textContent=msg; updateWallet(); saveRecord('Slots',balances[r1]); }
+    function spinSlots() {
+      // Play sound if available
+      // document.getElementById('slot-sound').play();
 
-    // Blackjack
-    let pHand=[], dHand=[];
-    function dealBlackjack(){ document.getElementById('card-sound').play(); pHand=[getCard(),getCard()]; dHand=[getCard(),getCard()]; renderBJ(); }
-    function hit(){ document.getElementById('card-sound').play(); pHand.push(getCard()); renderBJ(); }
-    function stand(){ document.getElementById('card-sound').play(); while(getTotal(dHand)<17) dHand.push(getCard()); renderBJ(true); }
-    function getCard(){ return Math.floor(Math.random()*11)+1; }
-    function getTotal(h){ return h.reduce((a,b)=>a+b,0); }
-    function renderBJ(finish=false){ document.getElementById('player-hand').textContent=pHand.join(', ');
-      document.getElementById('player-total').textContent=getTotal(pHand);
-      document.getElementById('dealer-hand').textContent=dHand.join(', ');
-      document.getElementById('dealer-total').textContent=getTotal(dHand);
-      let res=''; if(finish){ const pt=getTotal(pHand), dt=getTotal(dHand);
-        if(pt>21){ res='Bust!'; balances.ETH-=0.1; }
-        else if(dt>21||pt>dt){ res='You win!'; balances.ETH+=0.1; }
-        else if(pt===dt){ res="Tie!"; }
-        else { res='Dealer wins!'; balances.ETH-=0.1; }
-        document.getElementById('blackjack-result').textContent=res; updateWallet(); saveRecord('Blackjack',balances.ETH);
+      crypto.forEach((c, i) => {
+        const val = crypto[Math.floor(Math.random() * crypto.length)];
+        const el = document.getElementById('reel' + (i + 1));
+        el.textContent = val;
+        el.classList.add('fade');
+        setTimeout(() => el.classList.remove('fade'), 400);
+      });
+      const [r1, r2, r3] = crypto.map((_, i) => document.getElementById('reel' + (i + 1)).textContent);
+
+      const betAmount = 0.05;
+
+      let msg = '';
+      // User must have enough balance on the first reel crypto to play (bet)
+      if (balances[r1] < betAmount) {
+        msg = `Not enough ${r1} to bet ${betAmount.toFixed(2)}.`;
+        document.getElementById('slot-result').textContent = msg;
+        return;
       }
+
+      if (r1 === r2 && r2 === r3) {
+        // Jackpot win
+        const winAmount = betAmount * 5;
+        balances[r1] += winAmount;
+        msg = `Jackpot! You won +${winAmount.toFixed(2)} ${r1}!`;
+      } else if (r1 === r2 || r2 === r3 || r1 === r3) {
+        // Partial win
+        const winAmount = betAmount * 2;
+        balances[r1] += winAmount;
+        msg = `Nice! You matched two. You won +${winAmount.toFixed(2)} ${r1}!`;
+      } else {
+        // Lose bet
+        balances[r1] -= betAmount;
+        msg = `You lost -${betAmount.toFixed(2)} ${r1}.`;
+      }
+      updateWallet();
+      saveRecord('Slots', balances[r1]);
+      document.getElementById('slot-result').textContent = msg;
     }
 
-    // Dice
-    function rollDice(){ document.getElementById('dice-sound').play(); const guess=parseInt(document.getElementById('guess').value);
-      const roll=Math.floor(Math.random()*6)+1; let msg=''; if(guess===roll){ balances.LTC+=10; msg=`Correct! Rolled ${roll}. +10 LTC`; }
-      else { balances.LTC-=5; msg=`Wrong! Rolled ${roll}. -5 LTC`; }
-      document.getElementById('dice-result').textContent=msg; updateWallet(); saveRecord('Dice',balances.LTC); }
+    // Blackjack
+    let pHand = [],
+      dHand = [],
+      gameActive = false;
 
-    // Leaderboard
-    function saveRecord(game,val){ const lb=JSON.parse(localStorage.getItem('leaderboard'))||{}; lb[game]=Math.max(lb[game]||0,val); localStorage.setItem('leaderboard',JSON.stringify(lb)); }
-    function renderLeaderboard(){ const lb=JSON.parse(localStorage.getItem('leaderboard'))||{}; const tbody=document.getElementById('leader-body'); tbody.innerHTML=''; for(const g in lb){ const row=`<tr><td>${g}</td><td>${lb[g].toFixed(2)}</td></tr>`; tbody.insertAdjacentHTML('beforeend',row);} }
+    function getCard() {
+      // Cards 2-11 (ace=11 or 1, simplified as 11)
+      // Let's use values 1-11 for simplicity
+      return Math.floor(Math.random() * 11) + 1;
+    }
 
-    // Stock Market
-    let market={ AAPL:150, GOOG:2800, TSLA:700 };
-    let portfolio=JSON.parse(localStorage.getItem('portfolio'))||{AAPL:0,GOOG:0,TSLA:0};
-    function renderMarket(){ const mb=document.getElementById('market-body'); mb.innerHTML=''; for(const s in market){ mb.insertAdjacentHTML('beforeend',`<tr><td>${s}</td><td>$${market[s].toFixed(2)}</td><td>${portfolio[s]}</td></tr>`);} }
-    function tradeStock(buy){ const sym=document.getElementById('stock-select').value; const qty=parseInt(document.getElementById('stock-qty').value);
-      const price=market[sym]; let msg=''; if(buy){ portfolio[sym]+=qty; balances.BTC-= (price/50000)*qty; msg=`Bought ${qty} ${sym}`; } else { portfolio[sym]=Math.max(0,portfolio[sym]-qty); balances.BTC+= (price/50000)*qty; msg=`Sold ${qty} ${sym}`; }
-      document.getElementById('market-result').textContent=msg; updateWallet(); localStorage.setItem('portfolio',JSON.stringify(portfolio)); saveRecord('Market',balances.BTC); renderMarket(); }
+    function getTotal(hand) {
+      let total = hand.reduce((a, b) => a + b, 0);
+      // Handle aces (11) as 1 if total >21
+      let aceCount = hand.filter((c) => c === 11).length;
+      while (total > 21 && aceCount > 0) {
+        total -= 10;
+        aceCount--;
+      }
+      return total;
+    }
 
-    // Init
-    updateWallet(); renderLeaderboard(); renderMarket();
-  </script>
-</body>
-</html>
+    function renderBJ(finish = false) {
+      document.getElementById('player-hand').textContent = pHand.join(', ');
+      document.getElementById('player-total').textContent = getTotal(pHand);
+      document.getElementById('dealer-hand').textContent = dHand.join(', ');
+      document.getElementById('dealer-total').textContent = getTotal(dHand);
+
+      if (finish) {
+        const pt = getTotal(pHand),
+          dt = getTotal(dHand);
+        let res = '';
+        const bet = 0.1;
+        if (balances.ETH < bet) {
+          document.getElementById('blackjack-result').textContent = `Not enough ETH (${bet.toFixed(
+            2
+          )}) to bet. Please deposit more.`;
+          gameActive = false;
+          return;
+        }
+
+        if (pt > 21) {
+          res = 'Bust! You lose.';
+          balances.ETH -= bet;
+        } else if (dt > 21 || pt > dt) {
+          res = 'You win!';
+          balances.ETH += bet;
+        } else if (pt === dt) {
+          res = 'Tie!';
+          // No balance change
+        } else {
+          res = 'Dealer wins!';
+         

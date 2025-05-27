@@ -1,205 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Crypto Gambling & Stock Market Simulator</title>
-  <style>
-    /* Reset and global styles */
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #121212;
-      color: #eee;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stake Clone - Frontend Only</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="app">
 
-    header {
-      background-color: #1f1f1f;
-      border-bottom: 2px solid #444;
-      padding: 1.25rem 2rem;
-      font-weight: 700;
-      font-size: 1.75rem;
-      text-align: center;
-      user-select: none;
-      letter-spacing: 0.05em;
-      box-shadow: inset 0 -2px 0 #0055ff;
-    }
+  <!-- LOGIN/REGISTER MODAL -->
+  <div id="auth-modal" class="modal">
+    <div class="modal-content">
+      <h2 id="auth-title">Login</h2>
+      <form id="auth-form">
+        <input type="text" id="username" placeholder="Username" required />
+        <input type="password" id="password" placeholder="Password" required />
+        <button type="submit" id="auth-submit">Login</button>
+      </form>
+      <p id="auth-switch">
+        Don't have an account? <a href="#" id="switch-to-register">Register</a>
+      </p>
+      <p id="auth-error" class="error-msg"></p>
+    </div>
+  </div>
 
-    main {
-      flex-grow: 1;
-      max-width: 900px;
-      margin: 1.5rem auto 2rem;
-      padding: 1rem 2rem;
-      background-color: #222;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 85, 255, 0.3);
-    }
+  <!-- MAIN LAYOUT -->
+  <header>
+    <div class="logo">StakeClone</div>
+    <nav>
+      <button class="nav-btn" data-page="dice">Dice</button>
+      <button class="nav-btn" data-page="plinko">Plinko</button>
+      <button class="nav-btn" data-page="crash">Crash</button>
+      <button class="nav-btn" data-page="mines">Mines</button>
+      <button class="nav-btn" data-page="wallet">Wallet</button>
+      <button class="nav-btn" data-page="leaderboard">Leaderboard</button>
+      <button class="nav-btn" data-page="history">History</button>
+      <button id="logout-btn">Logout</button>
+    </nav>
+  </header>
 
-    h2 {
-      margin-top: 0;
-      color: #0055ff;
-      letter-spacing: 0.03em;
-      font-weight: 600;
-      margin-bottom: 1rem;
-    }
+  <main id="main-content">
+    <!-- Pages will be dynamically loaded here -->
+  </main>
 
-    /* Layout helpers */
-    .flex-row {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-    .flex-row > * {
-      flex-shrink: 0;
-    }
+  <footer>
+    <p>StakeClone © 2025. This is a fake frontend-only demo.</p>
+  </footer>
+</div>
 
-    /* Buttons */
-    button {
-      cursor: pointer;
-      background-color: #0055ff;
-      border: none;
-      border-radius: 6px;
-      color: white;
-      padding: 0.5rem 1.25rem;
-      font-size: 1rem;
-      font-weight: 600;
-      transition: background-color 0.3s ease;
-      box-shadow: 0 4px 8px rgb(0 85 255 / 0.3);
-      user-select: none;
-    }
-    button:disabled {
-      background-color: #444;
-      cursor: not-allowed;
-      box-shadow: none;
-      opacity: 0.6;
-    }
-    button:hover:not(:disabled) {
-      background-color: #0070ff;
-      box-shadow: 0 6px 12px rgb(0 120 255 / 0.5);
-    }
-
-    /* Inputs and selects */
-    input[type="number"], select {
-      font-size: 1rem;
-      padding: 0.45rem 0.8rem;
-      border-radius: 6px;
-      border: none;
-      outline-offset: 2px;
-      outline-color: #0055ff;
-      background-color: #111;
-      color: #eee;
-      width: 100%;
-      max-width: 150px;
-      user-select: text;
-      transition: background-color 0.3s ease;
-    }
-    input[type="number"]:focus, select:focus {
-      background-color: #222;
-    }
-
-    /* Balances display */
-    .balances {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-bottom: 2rem;
-    }
-    .balance {
-      background-color: #1a1a1a;
-      padding: 1rem 1.25rem;
-      border-radius: 8px;
-      flex: 1 1 120px;
-      text-align: center;
-      box-shadow: inset 0 0 10px #00339944;
-      transition: background-color 0.3s ease;
-      user-select: none;
-    }
-    .balance.selected {
-      background-color: #0033cc;
-      box-shadow: 0 0 12px #0055ffaa;
-      color: white;
-      font-weight: 700;
-    }
-
-    /* Section containers */
-    section {
-      background-color: #1a1a1a;
-      border-radius: 10px;
-      padding: 1rem 1.5rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 0 10px #000000cc;
-      user-select: none;
-    }
-
-    /* Scrollable lists */
-    .scrollable-list {
-      max-height: 200px;
-      overflow-y: auto;
-      margin-top: 0.75rem;
-      border-top: 1px solid #333;
-      padding-top: 0.5rem;
-    }
-    .list-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 0.4rem 0;
-      border-bottom: 1px solid #333;
-      color: #bbb;
-      font-size: 0.9rem;
-    }
-    .list-item:last-child {
-      border-bottom: none;
-    }
-
-    /* Game results & messages */
-    .message {
-      margin-top: 1rem;
-      font-weight: 600;
-      min-height: 1.4em;
-      color: #ffcc00;
-      text-align: center;
-      user-select: text;
-      font-size: 1.1rem;
-    }
-
-    /* Dice, coin, slot big icons */
-    .dice-roll, .coin-flip, .slot-spin {
-      font-size: 4rem;
-      margin: 1rem auto;
-      text-align: center;
-      height: 4.5rem;
-      user-select: none;
-      letter-spacing: 0.15em;
-      filter: drop-shadow(0 0 2px #0055ff88);
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 700px) {
-      main {
-        margin: 1rem 1rem 2rem;
-        padding: 1rem;
-      }
-      .flex-row {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      input[type="number"], select {
-        max-width: 100%;
-      }
-      button {
-        width: 100%;
-      }
-      .balances {
-        flex-direction
+<script src="app.js"></script>
+</body>
+</html>

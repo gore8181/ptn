@@ -12,8 +12,10 @@
       text-align: center;
       padding: 50px 20px;
       margin: 0;
-      height: 100vh;
-      overflow: hidden;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: #bbb;
+      transition: background-color 0.5s ease, color 0.5s ease;
     }
 
     a {
@@ -28,17 +30,16 @@
     h1 a {
       font-size: 2.5rem;
       text-decoration: underline;
+      color: inherit;
     }
 
     .names {
       font-size: 1.2rem;
-      color: #bbb;
       margin: 15px 0;
     }
 
     .channel-announcement {
       font-size: 1rem;
-      color: #bbb;
       margin: 30px 0 10px;
     }
 
@@ -88,6 +89,85 @@
       user-select: none;
       transition: filter 0.5s ease;
     }
+
+    /* Secret button in bottom right */
+    #secret-button {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      width: 40px;
+      height: 40px;
+      background: transparent;
+      border: 2px solid #bbb;
+      border-radius: 50%;
+      cursor: pointer;
+      opacity: 0.3;
+      transition: opacity 0.3s ease;
+      z-index: 1100;
+    }
+    #secret-button:hover {
+      opacity: 1;
+    }
+
+    /* Secret page container */
+    #secret-page {
+      display: none;
+      padding: 50px 20px;
+      min-height: 100vh;
+      background-color: #000;
+      color: #bbb;
+      font-family: 'UnifrakturMaguntia', cursive;
+      text-align: center;
+      overflow-y: auto;
+    }
+
+    #secret-page h1 {
+      font-size: 2.5rem;
+      text-decoration: underline;
+      margin-bottom: 30px;
+    }
+
+    #secret-page .download-images {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+    }
+
+    #secret-page .download-images a {
+      display: block;
+      width: 150px;
+      color: #bbb;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    #secret-page .download-images a:hover {
+      color: #fff;
+    }
+
+    #secret-page .download-images img {
+      max-width: 150px;
+      border: 2px solid #bbb;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      transition: border-color 0.3s ease;
+    }
+
+    #secret-page .download-images a:hover img {
+      border-color: #fff;
+    }
+
+    #secret-page #back-button {
+      margin-top: 40px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: #bbb;
+      text-decoration: underline;
+    }
+    #secret-page #back-button:hover {
+      color: #fff;
+    }
   </style>
 </head>
 <body class="blur">
@@ -103,16 +183,72 @@
     <div class="channel-link"><a href="https://example.com/channel">Our New Channel</a></div>
   </div>
 
+  <!-- Secret Button -->
+  <div id="secret-button" title="Secret Download Page"></div>
+
+  <!-- Secret Download Page -->
+  <div id="secret-page">
+    <h1>Secret Downloads</h1>
+    <div class="download-images">
+      <a href="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Twin_fairies_silhouette.png/800px-Twin_fairies_silhouette.png" download="Fairy_Twins.png" title="Download Fairy Twins">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Twin_fairies_silhouette.png/200px-Twin_fairies_silhouette.png" alt="Fairy Twins" />
+        Fairy Twins
+      </a>
+      <a href="https://upload.wikimedia.org/wikipedia/commons/3/36/Hopetoun_falls.jpg" download="Hopetoun_Falls.jpg" title="Download Hopetoun Falls">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Hopetoun_falls.jpg/200px-Hopetoun_falls.jpg" alt="Hopetoun Falls" />
+        Hopetoun Falls
+      </a>
+      <a href="https://upload.wikimedia.org/wikipedia/commons/d/d3/Albert_Einstein_Head.jpg" download="Einstein.jpg" title="Download Einstein">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Albert_Einstein_Head.jpg/200px-Albert_Einstein_Head.jpg" alt="Einstein" />
+        Einstein
+      </a>
+      <a href="https://upload.wikimedia.org/wikipedia/commons/1/14/Google_2015_logo.svg" download="Google_Logo.svg" title="Download Google Logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Google_2015_logo.svg/200px-Google_2015_logo.svg.png" alt="Google Logo" />
+        Google Logo
+      </a>
+    </div>
+    <div id="back-button">← Back to Home</div>
+  </div>
+
   <script>
     const overlay = document.getElementById('overlay');
     const body = document.body;
+    const secretButton = document.getElementById('secret-button');
+    const secretPage = document.getElementById('secret-page');
+    const content = document.getElementById('content');
+    const backButton = document.getElementById('back-button');
 
+    // Initial overlay click - remove overlay and blur
     overlay.addEventListener('click', () => {
       overlay.classList.add('hidden');
       setTimeout(() => {
         overlay.style.display = 'none';
         body.classList.remove('blur');
       }, 600);
+    });
+
+    // Secret button click: ask for password
+    secretButton.addEventListener('click', () => {
+      const password = prompt('Enter password to access downloads:');
+      if (password === 'opensesame') { // change your password here
+        // Show secret page, hide main content
+        content.style.display = 'none';
+        secretPage.style.display = 'block';
+        // Scroll top just in case
+        window.scrollTo(0, 0);
+        // Dark mode colors (optional)
+        body.style.backgroundColor = '#000';
+        body.style.color = '#bbb';
+      } else if (password !== null) {
+        alert('Incorrect password.');
+      }
+    });
+
+    // Back button returns to homepage
+    backButton.addEventListener('click', () => {
+      secretPage.style.display = 'none';
+      content.style.display = 'block';
+      window.scrollTo(0, 0);
     });
   </script>
 </body>

@@ -1,142 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Mines Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
-      background: #111;
+      background: #0f0f0f;
       color: #fff;
-      font-family: sans-serif;
+      font-family: 'Segoe UI', sans-serif;
       text-align: center;
-      padding: 20px;
+      margin: 0;
+      padding: 2rem;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
     }
     .grid {
       display: grid;
       grid-template-columns: repeat(5, 60px);
       gap: 10px;
       justify-content: center;
-      margin: 20px 0;
+      margin: 1rem 0;
     }
     .tile {
       width: 60px;
       height: 60px;
-      background: #222;
-      border: 1px solid #444;
-      cursor: pointer;
+      background: #1e1e1e;
+      border: 2px solid #333;
+      border-radius: 12px;
       font-size: 24px;
-      line-height: 60px;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
+    }
+    .tile:hover {
+      transform: scale(1.05);
     }
     .tile.revealed.safe {
-      background: #2ecc71;
+      background: #28c76f;
     }
     .tile.revealed.mine {
-      background: #e74c3c;
+      background: #ea5455;
     }
-    .controls {
-      margin: 10px 0;
+    .controls input, .controls button {
+      margin: 0.3rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      border: none;
+      background: #333;
+      color: #fff;
+    }
+    .controls button {
+      background: #6c5ce7;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .controls button:hover {
+      background: #a29bfe;
+    }
+    .status {
+      margin-top: 1rem;
     }
   </style>
 </head>
 <body>
 
-<h1>💣 Mines Game</h1>
+<h1>💣 Mines Game (Crypto Style)</h1>
+
 <div class="controls">
+  Wager (ETH): <input type="number" id="wager" value="0.01" step="0.001" min="0.001" />
   Mines: <input type="number" id="mineCount" value="5" min="1" max="24" />
-  <button onclick="startGame()">Start Game</button>
+  <button onclick="startGame()">Start</button>
   <button onclick="cashOut()">Cash Out</button>
 </div>
-<div>
-  <strong>Safe Clicks:</strong> <span id="safeCount">0</span><br>
-  <strong>Multiplier:</strong> <span id="multiplier">1.00x</span>
+
+<div class="status">
+  <div><strong>Balance:</strong> <span id="balance">0.00</span> ETH</div>
+  <div><strong>Safe Clicks:</strong> <span id="safeCount">0</span></div>
+  <div><strong>Multiplier:</strong> <span id="multiplier">1.00x</span></div>
 </div>
+
 <div class="grid" id="grid"></div>
 
 <script>
-const gridSize = 5;
-let minePositions = [];
-let revealedTiles = new Set();
-let safeClicks = 0;
-let gameOver = false;
+  const gridSize = 5;
+  let minePositions = new Set();
+  let revealed = new Set();
+  let safeClicks = 0;
+  let gameOver = false;
+  let wager = 0;
+  const baseMultiplier = 1.2;
 
-function startGame() {
-  const mineCount = parseInt(document.getElementById('mineCount').value);
-  if (mineCount < 1 || mineCount >= gridSize * gridSize) {
-    alert("Invalid mine count!");
-    return;
+  // Get or init balance from localStorage
+  function getBalance() {
+    return parseFloat(localStorage.getItem('balance') || '1.000');
   }
 
-  minePositions = [];
-  revealedTiles.clear();
-  safeClicks = 0;
-  gameOver = false;
-  document.getElementById('safeCount').innerText = safeClicks;
-  document.getElementById('multiplier').innerText = "1.00x";
-
-  const totalTiles = gridSize * gridSize;
-  const indices = [...Array(totalTiles).keys()];
-  indices.sort(() => 0.5 - Math.random());
-  minePositions = new Set(indices.slice(0, mineCount));
-
-  const grid = document.getElementById('grid');
-  grid.innerHTML = '';
-
-  for (let i = 0; i < totalTiles; i++) {
-    const tile = document.createElement('div');
-    tile.className = 'tile';
-    tile.dataset.index = i;
-    tile.onclick = () => clickTile(tile, i);
-    grid.appendChild(tile);
+  function setBalance(val) {
+    localStorage.setItem('balance', val.toFixed(6));
+    document.getElementById('balance').innerText = val.toFixed(6);
   }
-}
 
-function clickTile(tile, index) {
-  if (gameOver || revealedTiles.has(index)) return;
+  setBalance(getBalance());
 
-  revealedTiles.add(index);
+  function startGame() {
+    const mineCount = parseInt(document.getElementById('mineCount').value);
+    wager = parseFloat(document.getElementById('wager').value);
 
-  if (minePositions.has(index)) {
-    tile.classList.add('revealed', 'mine');
-    tile.innerText = "💣";
-    gameOver = true;
-    alert("💥 You hit a mine! Game Over.");
-    revealAll();
-  } else {
-    tile.classList.add('revealed', 'safe');
-    tile.innerText = "✔";
-    safeClicks++;
+    if (mineCount < 1 || mineCount >= gridSize * gridSize) {
+      alert("Invalid mine count");
+      return;
+    }
+    if (wager <= 0 || wager > getBalance()) {
+      alert("Invalid or insufficient wager");
+      return;
+    }
+
+    setBalance(getBalance() - wager);
+
+    minePositions = new Set();
+    revealed = new Set();
+    safeClicks = 0;
+    gameOver = false;
     updateMultiplier();
     document.getElementById('safeCount').innerText = safeClicks;
+
+    // Randomly set mines
+    const indices = [...Array(gridSize * gridSize).keys()];
+    indices.sort(() => 0.5 - Math.random());
+    minePositions = new Set(indices.slice(0, mineCount));
+
+    const grid = document.getElementById('grid');
+    grid.innerHTML = '';
+
+    for (let i = 0; i < gridSize * gridSize; i++) {
+      const tile = document.createElement('div');
+      tile.className = 'tile';
+      tile.dataset.index = i;
+      tile.onclick = () => handleClick(tile, i);
+      grid.appendChild(tile);
+    }
   }
-}
 
-function updateMultiplier() {
-  const base = 1.1;
-  const multiplier = (base ** safeClicks).toFixed(2);
-  document.getElementById('multiplier').innerText = multiplier + "x";
-}
+  function handleClick(tile, index) {
+    if (gameOver || revealed.has(index)) return;
 
-function cashOut() {
-  if (gameOver || safeClicks === 0) return;
-  const multiplier = document.getElementById('multiplier').innerText;
-  alert(`💰 You cashed out at ${multiplier}`);
-  revealAll();
-  gameOver = true;
-}
+    revealed.add(index);
 
-function revealAll() {
-  const tiles = document.querySelectorAll('.tile');
-  tiles.forEach(tile => {
-    const index = parseInt(tile.dataset.index);
     if (minePositions.has(index)) {
       tile.classList.add('revealed', 'mine');
-      tile.innerText = "💣";
-    } else if (!revealedTiles.has(index)) {
+      tile.innerText = '💣';
+      gameOver = true;
+      alert("💥 Boom! You hit a mine.");
+      revealAll();
+    } else {
       tile.classList.add('revealed', 'safe');
-      tile.innerText = "✔";
+      tile.innerText = '✔';
+      safeClicks++;
+      updateMultiplier();
+      document.getElementById('safeCount').innerText = safeClicks;
     }
-  });
-}
+  }
+
+  function updateMultiplier() {
+    const multiplier = (baseMultiplier ** safeClicks).toFixed(2);
+    document.getElementById('multiplier').innerText = multiplier + 'x';
+  }
+
+  function cashOut() {
+    if (gameOver || safeClicks === 0) return;
+    const multiplier = parseFloat(document.getElementById('multiplier').innerText);
+    const payout = wager * multiplier;
+    alert(`💰 Cashed out: ${payout.toFixed(6)} ETH`);
+    setBalance(getBalance() + payout);
+    revealAll();
+    gameOver = true;
+  }
+
+  function revealAll() {
+    const tiles = document.querySelectorAll('.tile');
+    tiles.forEach(tile => {
+      const idx = parseInt(tile.dataset.index);
+      if (minePositions.has(idx)) {
+        tile.classList.add('revealed', 'mine');
+        tile.innerText = '💣';
+      } else if (!revealed.has(idx)) {
+        tile.classList.add('revealed', 'safe');
+        tile.innerText = '✔';
+      }
+    });
+  }
 </script>
 
 </body>

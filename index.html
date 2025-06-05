@@ -1,120 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>654</title>
-  <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap" rel="stylesheet" />
-  <link rel="icon" type="image/png" href="download (2).png" />
+  <meta charset="UTF-8">
+  <title>Mines Game</title>
   <style>
     body {
-      background-color: #000;
-      font-family: 'UnifrakturMaguntia', cursive;
+      background: #111;
+      color: #fff;
+      font-family: sans-serif;
       text-align: center;
-      padding: 50px 20px;
-      margin: 0;
-      height: 100vh;
-      overflow: hidden;
+      padding: 20px;
     }
-
-    a {
-      color: #bbb;
-      transition: color 0.3s ease;
-    }
-
-    a:hover {
-      color: #fff;
-    }
-
-    h1 a {
-      font-size: 2.5rem;
-      text-decoration: underline;
-    }
-
-    .names {
-      font-size: 1.2rem;
-      color: #bbb;
-      margin: 15px 0;
-    }
-
-    .channel-announcement {
-      font-size: 1rem;
-      color: #bbb;
-      margin: 30px 0 10px;
-    }
-
-    .channel-link a {
-      font-size: 1.3rem;
-      font-weight: bold;
-      text-decoration: none;
-    }
-
-    img {
-      max-width: 150px;
-      margin-bottom: 20px;
-    }
-
-    /* Overlay styles */
-    #overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.85);
-      display: flex;
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, 60px);
+      gap: 10px;
       justify-content: center;
-      align-items: center;
-      z-index: 1000;
+      margin: 20px 0;
+    }
+    .tile {
+      width: 60px;
+      height: 60px;
+      background: #222;
+      border: 1px solid #444;
       cursor: pointer;
-      backdrop-filter: blur(8px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
+      font-size: 24px;
+      line-height: 60px;
     }
-
-    #overlay.hidden {
-      opacity: 0;
-      transform: scale(1.05);
-      pointer-events: none;
+    .tile.revealed.safe {
+      background: #2ecc71;
     }
-
-    #overlay .enter-text {
-      color: #fff;
-      font-size: 1.2rem;
-      font-family: 'UnifrakturMaguntia', cursive;
-      text-shadow: 0 0 6px #fff;
-      user-select: none;
+    .tile.revealed.mine {
+      background: #e74c3c;
     }
-
-    /* Blur main content when overlay is active */
-    body.blur #content {
-      filter: blur(8px);
-      pointer-events: none;
-      user-select: none;
-      transition: filter 0.5s ease;
+    .controls {
+      margin: 10px 0;
     }
   </style>
 </head>
-<body class="blur">
-  <div id="overlay" title="Click to Enter">
-    <div class="enter-text">Click to Enter</div>
-  </div>
+<body>
 
-  <div id="content">
-    <img src="download (2).png" alt="Fairy Twins" />
-    <h1><a href="https://doxbin.com/user/stm">meow</a></h1>
-    <div class="names">yk , con, rey, wallah, q</div>
-    <div class="channel-announcement">Our Old Channel Got Termed, So Join Our New One!</div>
-    <div class="channel-link"><a href="t.me/sextortme">Our New Channel</a></div>
-  </div>
+<h1>💣 Mines Game</h1>
+<div class="controls">
+  Mines: <input type="number" id="mineCount" value="5" min="1" max="24" />
+  <button onclick="startGame()">Start Game</button>
+  <button onclick="cashOut()">Cash Out</button>
+</div>
+<div>
+  <strong>Safe Clicks:</strong> <span id="safeCount">0</span><br>
+  <strong>Multiplier:</strong> <span id="multiplier">1.00x</span>
+</div>
+<div class="grid" id="grid"></div>
 
-  <script>
-    const overlay = document.getElementById('overlay');
-    const body = document.body;
+<script>
+const gridSize = 5;
+let minePositions = [];
+let revealedTiles = new Set();
+let safeClicks = 0;
+let gameOver = false;
 
-    overlay.addEventListener('click', () => {
-      overlay.classList.add('hidden');
-      setTimeout(() => {
-        overlay.style.display = 'none';
-        body.classList.remove('blur');
-      }, 600);
-    });
-  </script>
+function startGame() {
+  const mineCount = parseInt(document.getElementById('mineCount').value);
+  if (mineCount < 1 || mineCount >= gridSize * gridSize) {
+    alert("Invalid mine count!");
+    return;
+  }
+
+  minePositions = [];
+  revealedTiles.clear();
+  safeClicks = 0;
+  gameOver = false;
+  document.getElementById('safeCount').innerText = safeClicks;
+  document.getElementById('multiplier').innerText = "1.00x";
+
+  const totalTiles = gridSize * gridSize;
+  const indices = [...Array(totalTiles).keys()];
+  indices.sort(() => 0.5 - Math.random());
+  minePositions = new Set(indices.slice(0, mineCount));
+
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+
+  for (let i = 0; i < totalTiles; i++) {
+    const tile = document.createElement('div');
+    tile.className = 'tile';
+    tile.dataset.index = i;
+    tile.onclick = () => clickTile(tile, i);
+    grid.appendChild(tile);
+  }
+}
+
+function clickTile(tile, index) {
+  if (gameOver || revealedTiles.has(index)) return;
+
+  revealedTiles.add(index);
+
+  if (minePositions.has(index)) {
+    tile.classList.add('revealed', 'mine');
+    tile.innerText = "💣";
+    gameOver = true;
+    alert("💥 You hit a mine! Game Over.");
+    revealAll();
+  } else {
+    tile.classList.add('revealed', 'safe');
+    tile.innerText = "✔";
+    safeClicks++;
+    updateMultiplier();
+    document.getElementById('safeCount').innerText = safeClicks;
+  }
+}
+
+function updateMultiplier() {
+  const base = 1.1;
+  const multiplier = (base ** safeClicks).toFixed(2);
+  document.getElementById('multiplier').innerText = multiplier + "x";
+}
+
+function cashOut() {
+  if (gameOver || safeClicks === 0) return;
+  const multiplier = document.getElementById('multiplier').innerText;
+  alert(`💰 You cashed out at ${multiplier}`);
+  revealAll();
+  gameOver = true;
+}
+
+function revealAll() {
+  const tiles = document.querySelectorAll('.tile');
+  tiles.forEach(tile => {
+    const index = parseInt(tile.dataset.index);
+    if (minePositions.has(index)) {
+      tile.classList.add('revealed', 'mine');
+      tile.innerText = "💣";
+    } else if (!revealedTiles.has(index)) {
+      tile.classList.add('revealed', 'safe');
+      tile.innerText = "✔";
+    }
+  });
+}
+</script>
+
 </body>
 </html>
